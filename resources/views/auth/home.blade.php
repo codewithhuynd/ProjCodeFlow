@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -83,7 +84,7 @@
             outline: none;
             width: 150px;
         }
-        
+
         .search-bar input::placeholder {
             color: #bfdbfe;
         }
@@ -99,7 +100,7 @@
             transition: color 0.3s;
             color: #fff;
         }
-        
+
         .icons i:hover {
             color: #93c5fd;
         }
@@ -114,7 +115,8 @@
             padding-left: 15px;
         }
 
-        .auth-buttons a, .btn-logout {
+        .auth-buttons a,
+        .btn-logout {
             color: #fff;
             text-decoration: none;
             font-size: 14px;
@@ -126,48 +128,250 @@
             border: none;
         }
 
-        .btn-login:hover { color: #93c5fd; }
-        
-        .btn-register { background-color: #2563eb; }
-        .btn-register:hover { background-color: #1d4ed8; }
+        .btn-login:hover {
+            color: #93c5fd;
+        }
 
-        .btn-logout { border: 1px solid #fff; background: transparent; }
-        .btn-logout:hover { background-color: rgba(255,255,255,0.1); }
+        .btn-register {
+            background-color: #2563eb;
+        }
+
+        .btn-register:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-logout {
+            border: 1px solid #fff;
+            background: transparent;
+        }
+
+        .btn-logout:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
 
         /* --- CÁC PHẦN CÒN LẠI CỦA TRANG (GIỮ NGUYÊN) --- */
-        .hero { background-color: #eff6ff; display: flex; align-items: center; justify-content: space-between; padding: 60px 80px; min-height: 500px; }
-        .hero-content { flex: 1; padding-right: 50px; }
-        .hero-number { font-size: 100px; font-weight: 900; color: transparent; -webkit-text-stroke: 2px #1e3a8a; line-height: 1; margin-bottom: 20px; }
-        .hero-content h1 { font-size: 42px; font-weight: 800; color: #1e3a8a; margin-bottom: 20px; line-height: 1.2; }
-        .hero-content p { font-size: 18px; color: #3b82f6; margin-bottom: 40px; max-width: 80%; }
-        .btn-shop { background-color: #2563eb; color: #fff; padding: 15px 30px; text-decoration: none; font-weight: bold; font-size: 14px; border-radius: 4px; transition: background 0.3s, transform 0.2s; display: inline-block; }
-        .btn-shop:hover { background-color: #1d4ed8; transform: translateY(-2px); }
-        .hero-image { flex: 1; display: flex; justify-content: flex-end; }
-        .hero-image img { width: 100%; max-width: 500px; border-radius: 15px; object-fit: cover; box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15); }
-        .flash-sale { background-color: #1e40af; color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 20px 80px; }
-        .flash-sale-title { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
-        .flash-sale-link { color: #fff; text-decoration: none; font-weight: bold; transition: color 0.3s; }
-        .flash-sale-link:hover { color: #bfdbfe; }
-        .products { padding: 40px 80px; background: #f8fafc; display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
-        .product-card { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1); }
-        .product-image { position: relative; width: 100%; height: 300px; background-color: #f0f0f0; }
-        .product-image img { width: 100%; height: 100%; object-fit: cover; }
-        .badge { position: absolute; top: 15px; left: 15px; background-color: #2563eb; color: #fff; padding: 5px 10px; font-size: 12px; font-weight: bold; border-radius: 4px; }
-        .product-info { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .price { display: flex; flex-direction: column; }
-        .old-price { text-decoration: line-through; color: #94a3b8; font-size: 13px; }
-        .new-price { color: #2563eb; font-weight: bold; font-size: 16px; }
-        .btn-add { background-color: #1e3a8a; color: #fff; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px; transition: background 0.3s; }
-        .btn-add:hover { background-color: #2563eb; }
-        footer { background-color: #0f172a; color: #fff; display: flex; justify-content: space-between; padding: 20px 80px; align-items: center; font-size: 14px; }
-        .footer-links { display: flex; gap: 30px; }
-        .footer-links a { color: #94a3b8; text-decoration: none; transition: color 0.3s; }
-        .footer-links a:hover { color: #fff; }
-        .footer-socials i { font-size: 20px; margin-left: 15px; cursor: pointer; color: #94a3b8; transition: color 0.3s; }
-        .footer-socials i:hover { color: #60a5fa; }
+        .hero {
+            background-color: #eff6ff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 60px 80px;
+            min-height: 500px;
+        }
+
+        .hero-content {
+            flex: 1;
+            padding-right: 50px;
+        }
+
+        .hero-number {
+            font-size: 100px;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 2px #1e3a8a;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: #1e3a8a;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: #3b82f6;
+            margin-bottom: 40px;
+            max-width: 80%;
+        }
+
+        .btn-shop {
+            background-color: #2563eb;
+            color: #fff;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: background 0.3s, transform 0.2s;
+            display: inline-block;
+        }
+
+        .btn-shop:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 15px;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
+        }
+
+        .flash-sale {
+            background-color: #1e40af;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 80px;
+        }
+
+        .flash-sale-title {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flash-sale-link {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .flash-sale-link:hover {
+            color: #bfdbfe;
+        }
+
+        .products {
+            padding: 40px 80px;
+            background: #f8fafc;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1);
+        }
+
+        .product-image {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background-color: #f0f0f0;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: #2563eb;
+            color: #fff;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        .product-info {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .new-price {
+            color: #2563eb;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .btn-add {
+            background-color: #1e3a8a;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+
+        .btn-add:hover {
+            background-color: #2563eb;
+        }
+
+        footer {
+            background-color: #0f172a;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 80px;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .footer-socials i {
+            font-size: 20px;
+            margin-left: 15px;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.3s;
+        }
+
+        .footer-socials i:hover {
+            color: #60a5fa;
+        }
     </style>
 </head>
+
 <body>
 
     <header>
@@ -185,7 +389,7 @@
                 </ul>
             </nav>
         </div>
-        
+
         <div class="header-actions">
             <div class="search-bar">
                 <i class="fas fa-search"></i>
@@ -199,15 +403,15 @@
 
             <div class="auth-buttons">
                 @auth
-                    <span style="font-size: 14px; color: #93c5fd;">Chào, <strong>{{ Auth::user()->name }}</strong></span>
-                    
-                    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                        @csrf
-                        <button type="submit" class="btn-logout">Đăng xuất</button>
-                    </form>
+                <span style="font-size: 14px; color: #93c5fd;">Chào, <strong>{{ Auth::user()->name }}</strong></span>
+
+                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="btn-logout">Đăng xuất</button>
+                </form>
                 @else
-                    <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
-                    <a href="/register" class="btn-register">Đăng ký</a>
+                <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
+                <a href="/register" class="btn-register">Đăng ký</a>
                 @endauth
             </div>
         </div>
@@ -221,7 +425,7 @@
             <a href="#" class="btn-shop">MUA SẮM NGAY</a>
         </div>
         <div class="hero-image">
-            <img src="duchuygay.jpg" alt="Người mẫu thời trang">
+            <img src="" alt="Người mẫu thời trang">
         </div>
     </section>
 
@@ -234,27 +438,36 @@
 
     <section class="products">
         @if(isset($products) && $products->count() > 0)
-            @foreach($products as $product)
-                <div class="product-card">
-                    <div class="product-image">
-                        <div class="badge">MỚI</div>
-                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}">
-                    </div>
-                    <div class="product-info">
-                        <div class="price">
-                            <span style="font-weight: bold; color: #1e3a8a; margin-bottom: 5px; font-size: 15px;">
-                                {{ $product->name }}
-                            </span>
-                            <span class="new-price">{{ number_format($product->price, 0, ',', '.') }}đ</span>
-                        </div>
-                        <button class="btn-add">Thêm vào giỏ</button>
-                    </div>
+        @foreach($products as $product)
+
+        <a href="{{ route('product.show', $product->id) }}" style="text-decoration:none; color:inherit;">
+            <div class="product-card">
+                <div class="product-image">
+                    <div class="badge">MỚI</div>
+                    <img src="{{ asset($product->image) }}" alt="{{ $product->name }}">
                 </div>
-            @endforeach
+
+                <div class="product-info">
+                    <div class="price">
+                        <span style="font-weight: bold; color: #1e3a8a;">
+                            {{ $product->name }}
+                        </span>
+
+                        <span class="new-price">
+                            {{ number_format($product->price, 0, ',', '.') }}đ
+                        </span>
+                    </div>
+
+                    <button class="btn-add">Thêm vào giỏ</button>
+                </div>
+            </div>
+        </a>
+
+        @endforeach
         @else
-            <p style="grid-column: span 4; text-align: center; color: #64748b; padding: 20px;">
-                Chưa có sản phẩm nào. Vui lòng thêm sản phẩm từ trang Admin!
-            </p>
+        <p style="grid-column: span 4; text-align: center; color: #64748b; padding: 20px;">
+            Chưa có sản phẩm nào. Vui lòng thêm sản phẩm từ trang Admin!
+        </p>
         @endif
     </section>
 
@@ -273,4 +486,5 @@
     </footer>
 
 </body>
+
 </html>

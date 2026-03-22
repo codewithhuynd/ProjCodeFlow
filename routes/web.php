@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductController;
 
 //trang đăng ký
 Route::get('/register',[RegisterController::class,'showRegister']);
@@ -19,3 +20,7 @@ Route::post('/login', [LoginController::class, 'login']);
 
 // Trang Chủ
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+
+
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
