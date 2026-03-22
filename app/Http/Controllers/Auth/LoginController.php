@@ -28,7 +28,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
             
             // Hợp lệ -> Chuyển về trang chủ (welcome)
-            return redirect('/'); 
+            return redirect('/home');
         }
 
         // Sai -> Quay lại báo lỗi
@@ -36,4 +36,15 @@ class LoginController extends Controller
             'email' => 'Thông tin đăng nhập không chính xác.',
         ])->onlyInput('email');
     }
+    // Xử lý Đăng xuất
+    public function logout(Request $request)
+    {
+        Auth::logout(); // Hủy phiên đăng nhập của người dùng
+
+        $request->session()->invalidate(); // Xóa toàn bộ dữ liệu session
+        $request->session()->regenerateToken(); // Tạo lại token bảo mật (chống hack CSRF)
+
+        return redirect('/home'); // Đăng xuất xong thì quay về trang chủ
+    }
 }
+
