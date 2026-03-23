@@ -52,3 +52,5 @@ Route::prefix('admin')->group(function () {
     // Route để Xóa
     Route::delete('/products/{id}', [AdminController::class, 'destroy'])->name('admin.products.destroy');
 });
+//Trang tìm kiếm sản phẩm
+Route::get('/search', [ProductController::class, 'search'])->name('products.search');

@@ -388,11 +388,12 @@
             </nav>
         </div>
 
-        <div class="header-actions">
-            <div class="search-bar">
+        <form action="{{ route('products.search') }}" method="GET" class="search-bar">
+            <button type="submit" style="background: none; border: none; color: #bfdbfe; cursor: pointer; padding: 0;">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="TÌM KIẾM...">
-            </div>
+            </button>
+            <input type="text" name="query" placeholder="TÌM KIẾM..." value="{{ request('query') }}">
+        </form>
 
             <div class="icons">
                 <i class="fas fa-filter" title="Bộ lọc"></i>
@@ -473,7 +474,7 @@
 
         @empty
         <p style="grid-column: span 4; text-align: center; color: #64748b; padding: 20px;">
-            Chưa có sản phẩm nào. Vui lòng thêm sản phẩm từ trang Admin!
+            Chưa có sản phẩm nào. Hãy đón chờ các sản phẩm mới nhé!
         </p>
         @endforelse
     </section>
