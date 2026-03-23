@@ -37,3 +37,18 @@ Route::prefix('admin') -> middleware(['auth','admin']) ->group(function(){
     //Khi vào /admin/logout → gọi hàm logout() để đăng xuất.
     Route::get('/logout',[AdminController::class,'logout']);
 });
+//Trang quản lý sản phẩm
+Route::prefix('admin')->group(function () {
+    Route::get('/products', [AdminController::class, 'manageProducts'])->name('admin.products');
+    
+    // Route để Thêm
+    Route::get('/products/create', [AdminController::class, 'create'])->name('admin.products.create');
+    Route::post('/products/store', [AdminController::class, 'store'])->name('admin.products.store');
+
+    // Route để Sửa
+    Route::get('/products/{id}/edit', [AdminController::class, 'edit'])->name('admin.products.edit');
+    Route::put('/products/{id}', [AdminController::class, 'update'])->name('admin.products.update');
+
+    // Route để Xóa
+    Route::delete('/products/{id}', [AdminController::class, 'destroy'])->name('admin.products.destroy');
+});

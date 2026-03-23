@@ -1,328 +1,324 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>{{ $product->name }}</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <title>{{ $product->name }} | GUCO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<style>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+        }
 
-body{
-font-family: Arial, sans-serif;
-background:#fafafa;
-margin:0;
-}
+        /* ================= HEADER STYLE ================= */
+        header {
+            background-color: #1e3a8a;
+            color: #fff;
+            padding: 10px 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-/* HEADER */
+        .logo-nav { display: flex; align-items: center; gap: 40px; }
+        .logo-nav img { height: 45px; cursor: pointer; transition: 0.3s; }
+        .logo-nav img:hover { transform: scale(1.05); }
 
-.header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px 60px;
-background:white;
-border-bottom:1px solid #eee;
-}
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+            margin: 0;
+            padding: 0;
+        }
 
-.logo{
-font-weight:bold;
-font-size:20px;
-}
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
 
-.nav a{
-margin-left:30px;
-text-decoration:none;
-color:#333;
-}
+        .header-actions { display: flex; align-items: center; gap: 25px; }
 
-/* CONTAINER */
+        .search-bar {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            padding: 6px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
 
-.container{
-max-width:1200px;
-margin:40px auto;
-padding:20px;
-}
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            outline: none;
+            margin-left: 8px;
+            width: 140px;
+            font-size: 13px;
+        }
 
-/* BACK */
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
-.back{
-margin-bottom:20px;
-color:#666;
-text-decoration:none;
-display:inline-block;
-}
+        .action-item i { font-size: 18px; }
+        .action-item span { font-size: 10px; text-transform: uppercase; }
 
-/* PRODUCT LAYOUT */
+        .auth-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            padding-left: 20px;
+        }
 
-.product{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:40px;
-background:white;
-padding:30px;
-border-radius:25px;
-}
+        .user-info { font-size: 13px; text-align: right; line-height: 1.2; }
+        
+        .btn-logout-white {
+            border: 1px solid #fff;
+            background: transparent;
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-logout-white:hover { background: #fff; color: #1e3a8a; }
 
-/* IMAGE */
+        /* ================= CONTAINER & PRODUCT ================= */
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
 
-.product-image img{
-width:100%;
-border-radius:10px;
-}
+        .btnHome {
+            margin-bottom: 20px;
+            padding: 10px 18px;
+            background-color: #1e3a8a;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
 
-/* INFO */
+        .product {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
 
-.product-info h1{
-margin-top:0;
-font-size:28px;
-}
+        .product-image img { width: 100%; border-radius: 8px; }
 
-.category{
-color:#777;
-margin-bottom:10px;
-}
+        .product-info h1 { margin: 0 0 10px 0; font-size: 32px; color: #333; }
+        .category { color: #999; text-transform: uppercase; font-size: 13px; letter-spacing: 1px; }
+        .price { color: #1e3a8a; font-size: 30px; font-weight: bold; margin: 20px 0; }
+        .description { color: #666; line-height: 1.7; border-top: 1px solid #eee; padding-top: 20px; }
 
-.price{
-color:#2563eb;
-font-size:26px;
-font-weight:bold;
-margin:15px 0;
-}
+        .option-title { margin-top: 25px; font-weight: bold; color: #333; text-transform: uppercase; font-size: 14px; }
+        .options { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 12px; }
+        
+        .options button {
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
 
-.description{
-color:#555;
-line-height:1.6;
-}
+        .options button.active {
+            background-color: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+        }
 
-/* OPTIONS */
+        .quantity { display: flex; align-items: center; margin-top: 15px; }
+        .quantity button { width: 40px; height: 40px; border: 1px solid #ddd; background: #fff; font-size: 20px; cursor: pointer; }
+        .quantity input { width: 60px; text-align: center; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; border-left: none; border-right: none; height: 40px; font-weight: bold; }
 
-.option-title{
-margin-top:20px;
-font-weight:bold;
-}
-
-.options{
-margin-top:10px;
-}
-
-.options button{
-padding:10px 18px;
-margin-right:10px;
-border:1px solid #ddd;
-background:white;
-border-radius:8px;
-cursor:pointer;
-}
-
-.options button:hover{
-border-color:#2563eb;
-color:#2563eb;
-}
-
-/* QUANTITY */
-
-.quantity{
-display:flex;
-align-items:center;
-margin-top:20px;
-}
-
-.quantity button{
-width:35px;
-height:35px;
-border:none;
-background:#eee;
-font-size:18px;
-cursor:pointer;
-}
-
-.quantity input{
-width:50px;
-text-align:center;
-border:1px solid #ddd;
-height:35px;
-}
-
-/* BUTTON */
-
-.actions{
-margin-top:25px;
-display:flex;
-gap:15px;
-}
-
-.add-cart{
-flex:1;
-padding:14px;
-background: #1035d6;
-border:none;
-color:white;
-border-radius:8px;
-font-size:16px;
-cursor:pointer;
-}
-
-.buy-now{
-flex:1;
-padding:14px;
-background:#1035d6;
-border:none;
-color:white;
-border-radius:8px;
-font-size:16px;
-cursor:pointer;
-}
-
-.stock{
-margin-top:10px;
-color:#777;
-}
-
-.btnHome{
-margin-bottom:20px;padding:10px 15px;background:#eee;border:none;border-radius:8px;cursor:pointer;
-background-color: #1035d6;
-color: white;
-}
-
-.btnHome:hover{
-background-color: #2563eb;}
-
-</style>
+        .actions { margin-top: 40px; display: flex; gap: 20px; }
+        .add-cart {
+            flex: 1;
+            padding: 16px;
+            background: #fff;
+            border: 2px solid #1e3a8a;
+            color: #1e3a8a;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .buy-now {
+            flex: 1;
+            padding: 16px;
+            background: #1e3a8a;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .stock { margin-top: 15px; color: #22c55e; font-weight: 500; font-size: 14px; }
+    </style>
 </head>
-
 
 <body>
 
-<div class="header">
+    <header>
+        <div class="logo-nav">
+            <a href="/home">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo GUCO">
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#">New Arrivals</a></li>
+                    <li><a href="#">Nữ</a></li>
+                    <li><a href="#">Nam</a></li>
+                    <li><a href="#">Sale</a></li>
+                </ul>
+            </nav>
+        </div>
 
-<div class="logo">
-FASHION STORE
-</div>
+        <div class="header-actions">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="TÌM KIẾM...">
+            </div>
 
-<div class="nav">
-<a href="/home">Trang chủ</a>
-<a href="/products">Sản phẩm</a>
-<a href="/cart">Giỏ hàng</a>
-<a href="/login">Đăng nhập</a>
-</div>
+            <div class="action-item">
+                <i class="fas fa-filter"></i>
+                <span>Bộ lọc</span>
+            </div>
 
-</div>
+            <a href="/cart" class="action-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Giỏ hàng</span>
+            </a>
+            
+            <div class="auth-buttons">
+                @auth
+                    <div class="user-info">
+                        @if(Auth::user()->is_admin)
+                            <span style="color: #ff4d4d;"></span><br>
+                        @endif
+                        <strong>{{ Auth::user()->name }}</strong>
+                    </div>
+                    
+                    <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                        @csrf
+                        <button type="submit" class="btn-logout-white">ĐĂNG XUẤT</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="action-item">
+                        <i class="fas fa-user"></i>
+                        <span>Đăng nhập</span>
+                    </a>
+                @endauth
+            </div>
+        </div>
+    </header>
 
+    <div class="container">
+        <button onclick="window.location.href='/home'" class="btnHome">
+            <i class="fas fa-arrow-left"></i> QUAY LẠI
+        </button>
 
-<div class="container">
+        <div class="product">
+            <div class="product-image">
+                <img src="{{ asset($product->image) }}" alt="{{ $product->name }}">
+            </div>
 
-<button onclick="window.location.href='/home'" class="btnHome">
-← Quay lại danh sách sản phẩm
-</button>
+            <div class="product-info">
+                <div class="category">{{ $product->category->name ?? 'Thời trang' }}</div>
+                <h1>{{ $product->name }}</h1>
+                <div class="price">{{ number_format($product->price, 0, ',', '.') }}đ</div>
+                
+                <div class="description">
+                    {{ $product->description }}
+                </div>
 
+                @if(!empty($product->available_colors))
+                    <div class="option-title">Màu sắc</div>
+                    <div class="options">
+                        @foreach($product->available_colors as $color)
+                            <button class="color-btn" onclick="selectOption(this, '.color-btn')">{{ $color }}</button>
+                        @endforeach
+                    </div>
+                @endif
 
-<div class="product">
+                @if(!empty($product->available_sizes))
+                    <div class="option-title">Kích thước</div>
+                    <div class="options">
+                        @foreach($product->available_sizes as $size)
+                            <button class="size-btn" onclick="selectOption(this, '.size-btn')">{{ $size }}</button>
+                        @endforeach
+                    </div>
+                @endif
 
-<div class="product-image">
-<img src="{{ $product->image }}">
-</div>
+                <div class="option-title">Số lượng</div>
+                <div class="quantity">
+                    <button onclick="minus()">-</button>
+                    <input type="text" id="qty" value="1" readonly>
+                    <button onclick="plus()">+</button>
+                </div>
+                <div class="stock">
+                    <i class="fas fa-check-circle"></i> Còn {{ $product->stock }} sản phẩm trong kho
+                </div>
 
+                <div class="actions">
+                    <button class="add-cart">THÊM VÀO GIỎ HÀNG</button>
+                    <button class="buy-now">MUA NGAY</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="product-info">
+    <script>
+        const maxStock = Number("{{ $product->stock }}");
 
-<div class="category">
-{{ $product->category->name ?? 'Thời trang' }}
-</div>
+        function plus() {
+            let qtyInput = document.getElementById("qty");
+            let currentVal = parseInt(qtyInput.value);
+            if(currentVal < maxStock) {
+                qtyInput.value = currentVal + 1;
+            } else {
+                alert('Rất tiếc, kho chỉ còn ' + maxStock + ' sản phẩm!');
+            }
+        }
 
-<h1>
-{{ $product->name }}
-</h1>
+        function minus() {
+            let qtyInput = document.getElementById("qty");
+            let currentVal = parseInt(qtyInput.value);
+            if(currentVal > 1) {
+                qtyInput.value = currentVal - 1;
+            }
+        }
 
-<div class="price">
-{{ number_format($product->price) }}đ
-</div>
-
-<div class="description">
-{{ $product->description }}
-</div>
-
-
-<div class="option-title">
-Màu sắc
-</div>
-
-<div class="options">
-<button>Trắng</button>
-<button>Đen</button>
-<button>Xám</button>
-<button>Xanh Navy</button>
-</div>
-
-
-<div class="option-title">
-Kích thước
-</div>
-
-<div class="options">
-<button>S</button>
-<button>M</button>
-<button>L</button>
-<button>XL</button>
-<button>XXL</button>
-</div>
-
-
-<div class="option-title">
-Số lượng
-</div>
-
-<div class="quantity">
-
-<button onclick="minus()">-</button>
-
-<input type="text" id="qty" value="1">
-
-<button onclick="plus()">+</button>
-
-</div>
-
-
-<div class="actions">
-
-<button class="add-cart">
-<i class="fas fa-shopping-cart" title="Giỏ hàng"></i>
- Thêm vào giỏ hàng
-</button>
-
-<button class="buy-now">
-Mua ngay
-</button>
-
-</div>
-
-<div class="stock">
-Còn {{ $product->stock }} sản phẩm trong kho
-</div>
-
-
-</div>
-
-</div>
-
-</div>
-
-
-<script>
-
-function plus(){
-let qty=document.getElementById("qty");
-qty.value=parseInt(qty.value)+1;
-}
-
-function minus(){
-let qty=document.getElementById("qty");
-if(qty.value>1){
-qty.value=parseInt(qty.value)-1;
-}
-}
-
-</script>
-
+        function selectOption(clickedBtn, groupClass) {
+            let allBtns = document.querySelectorAll(groupClass);
+            allBtns.forEach(btn => btn.classList.remove('active'));
+            clickedBtn.classList.add('active');
+        }
+    </script>
 
 </body>
 </html>
