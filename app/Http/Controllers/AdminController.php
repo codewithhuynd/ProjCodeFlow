@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Product;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -52,5 +54,59 @@ class AdminController extends Controller
     {
         Auth::logout();
         return redirect('/admin/login');
+    }
+
+    public function manageProducts()
+    {
+    // Lấy toàn bộ sản phẩm từ Database, sắp xếp mới nhất lên đầu
+    $products = Product::orderBy('id', 'desc')->get(); 
+    
+    // Trả về view và truyền biến $products sang
+    return view('admin.products', compact('products'));
+    }
+    // 1. Hàm Xóa sản phẩm
+    public function destroy($id) 
+    {
+    $product = Product::findOrFail($id);
+    $product->delete(); // Xóa khỏi DB -> Trang chủ mất luôn sản phẩm này
+    return redirect()->back()->with('success', 'Đã xóa sản phẩm!');
+    }
+
+// 2. Hàm hiện trang Sửa
+    public function edit($id) 
+    {
+    $product = Product::findOrFail($id);
+    return view('admin.edit_product', compact('product'));
+    }
+
+// 3. Hàm lưu dữ liệu sau khi Sửa
+    public function update(Request $request, $id) 
+    {
+    $product = Product::findOrFail($id);
+    
+    // Cập nhật toàn bộ thông tin mới
+    $product->update([
+        'name' => $request->name,
+        'price' => $request->price,
+        'image' => $request->image,
+        'description' => $request->description, // Đã thêm dòng lưu mô tả
+    ]);
+    
+    return redirect()->route('admin.products')->with('success', 'Cập nhật thành công!');
+    }
+    // Hàm Thêm sản phẩm mới
+    public function store(Request $request)
+    {
+        Product::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'stock' => $request->stock,
+            'image' => $request->image,
+            'description' => $request->description,
+            'category_id' => 1, // Vì chưa làm chọn danh mục, gán tạm vào danh mục số 1
+            'slug' => Str::slug($request->name), // Tự động tạo link slug từ tên sản phẩm
+        ]);
+
+        return redirect()->route('admin.products')->with('success', 'Đã thêm sản phẩm mới thành công!');
     }
 }
