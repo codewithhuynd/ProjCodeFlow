@@ -369,6 +369,21 @@
         .footer-socials i:hover {
             color: #60a5fa;
         }
+
+        .sort-bar {
+            padding: 20px 80px;
+            display: flex;
+            justify-content: flex-end;
+            background: #f8fafc;
+        }
+
+        .sort-bar select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #cbd5f5;
+            font-size: 14px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -394,21 +409,21 @@
             <input type="text" name="query" placeholder="TÌM KIẾM..." value="{{ request('query') }}">
         </form>
 
-            @php
-                $cart = session('cart', []);
-                $totalQuantity = 0;
-                foreach ($cart as $item) {
-                    $totalQuantity += $item['quantity'];
-                }
-            @endphp
+        @php
+        $cart = session('cart', []);
+        $totalQuantity = 0;
+        foreach ($cart as $item) {
+        $totalQuantity += $item['quantity'];
+        }
+        @endphp
 
-            <div class="icons">
-                <i class="fas fa-filter" title="Bộ lọc"></i>
+        <div class="icons">
+            <i class="fas fa-filter" title="Bộ lọc"></i>
 
-                <div style="position: relative; display:inline-block;">
-                    <i class="fas fa-shopping-cart" title="Giỏ hàng"></i>
+            <div style="position: relative; display:inline-block;">
+                <i class="fas fa-shopping-cart" title="Giỏ hàng"></i>
 
-                    <span id="cart-count" style="
+                <span id="cart-count" style="
                         position: absolute;
                         top: -8px;
                         right: -10px;
@@ -420,35 +435,35 @@
                         /* Nếu giỏ hàng trống thì ẩn đi, có hàng thì hiện inline-block */
                         display: {{ $totalQuantity > 0 ? 'inline-block' : 'none' }};
                     ">
-                        {{ $totalQuantity }}
-                    </span>
-                </div>
+                    {{ $totalQuantity }}
+                </span>
             </div>
+        </div>
 
-            <div class="auth-buttons">
-                @auth
-                    @if(Auth::user()->is_admin)
-                        <span style="font-size: 14px; color: #ef4444;">Đang dùng quyền Quản trị</span>
-                        <a href="/admin/dashboard" style="background-color: #1e3a8a; color: white; padding: 6px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px;">
-                            Vào Trang Admin
-                        </a>
-                        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                            @csrf
-                            <button type="submit" class="btn-logout">Đăng xuất</button>
-                        </form>
-                    @else
-                        <span style="font-size: 14px; color: #93c5fd;">Chào <strong>{{ Auth::user()->name }}</strong></span>
-                        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                            @csrf
-                            <button type="submit" class="btn-logout">Đăng xuất</button>
-                        </form>
-                    @endif
+        <div class="auth-buttons">
+            @auth
+            @if(Auth::user()->is_admin)
+            <span style="font-size: 14px; color: #ef4444;">Đang dùng quyền Quản trị</span>
+            <a href="/admin/dashboard" style="background-color: #1e3a8a; color: white; padding: 6px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                Vào Trang Admin
+            </a>
+            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn-logout">Đăng xuất</button>
+            </form>
+            @else
+            <span style="font-size: 14px; color: #93c5fd;">Chào <strong>{{ Auth::user()->name }}</strong></span>
+            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn-logout">Đăng xuất</button>
+            </form>
+            @endif
 
-                @else
-                    <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
-                    <a href="/register" class="btn-register">Đăng ký</a>
-                @endauth
-            </div>
+            @else
+            <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
+            <a href="/register" class="btn-register">Đăng ký</a>
+            @endauth
+        </div>
         </div>
     </header>
 
@@ -465,12 +480,31 @@
     </section>
 
     <div class="flash-sale">
+
         <div class="flash-sale-title">
             <i class="fas fa-bolt"></i> NEW ✨✨✨
         </div>
         <a href="#" class="flash-sale-link">Xem tất cả &rarr;</a>
     </div>
+    <div class="sort-bar">
+        <form method="GET" action="{{ route('home') }}">
+            <select name="sort" onchange="this.form.submit()">
 
+                <option value="">Sắp xếp theo giá</option>
+
+                <option value="price_asc"
+                    {{ request('sort') == 'price_asc' ? 'selected' : '' }}>
+                    Giá: Thấp → Cao
+                </option>
+
+                <option value="price_desc"
+                    {{ request('sort') == 'price_desc' ? 'selected' : '' }}>
+                    Giá: Cao → Thấp
+                </option>
+
+            </select>
+        </form>
+    </div>
     <section class="products">
         @forelse($products as $product)
 
@@ -492,7 +526,7 @@
                         </span>
                     </div>
 
-                    <button class="btn-add" onclick="addToCart(event, {{ $product->id }})">Thêm vào giỏ</button>
+                    <button class="btn-add" onclick="addToCart(event, {{ $product->id }});">Thêm vào giỏ</button>
                 </div>
             </a>
         </div>
@@ -518,33 +552,34 @@
         </div>
     </footer>
     <script>
-    function addToCart(event, productId) {
-        event.preventDefault();
-        event.stopPropagation();
+        function addToCart(event, productId) {
+            event.preventDefault();
+            event.stopPropagation();
 
-        fetch('/add-to-cart/' + productId, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Luôn hiện thông báo (dù thành công hay đã có trong giỏ)
-            alert(data.message);
+            fetch('/add-to-cart/' + productId, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Luôn hiện thông báo (dù thành công hay đã có trong giỏ)
+                    alert(data.message);
 
-            // CHỈ cập nhật số trên Navbar nếu success là true
-            if (data.success) {
-                let badge = document.getElementById('cart-count');
-                if (badge) {
-                    badge.innerText = data.cartCount;
-                    badge.style.display = 'inline-block';
-                }
-            }
-        })
-        .catch(error => console.error('Lỗi:', error));
-    }
+                    // CHỈ cập nhật số trên Navbar nếu success là true
+                    if (data.success) {
+                        let badge = document.getElementById('cart-count');
+                        if (badge) {
+                            badge.innerText = data.cartCount;
+                            badge.style.display = 'inline-block';
+                        }
+                    }
+                })
+                .catch(error => console.error('Lỗi:', error));
+        }
     </script>
 </body>
+
 </html>
