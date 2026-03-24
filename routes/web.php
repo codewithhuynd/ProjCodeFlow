@@ -25,6 +25,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
+Route::post('/add-to-cart/{id}', [ProductController::class, 'addToCart'])->name('add.to.cart');
 
 //Trang admin
 //Khi người dùng vào /admin/login (GET) → gọi hàm showLogin() trong AdminController để hiển thị form login admin:
