@@ -373,7 +373,6 @@
 </head>
 
 <body>
-
     <header>
         <div class="logo-nav">
             <img src="/images/logo.png" height="40">
@@ -395,9 +394,35 @@
             <input type="text" name="query" placeholder="TÌM KIẾM..." value="{{ request('query') }}">
         </form>
 
+            @php
+                $cart = session('cart', []);
+                $totalQuantity = 0;
+                foreach ($cart as $item) {
+                    $totalQuantity += $item['quantity'];
+                }
+            @endphp
+
             <div class="icons">
                 <i class="fas fa-filter" title="Bộ lọc"></i>
-                <i class="fas fa-shopping-cart" title="Giỏ hàng"></i>
+
+                <div style="position: relative; display:inline-block;">
+                    <i class="fas fa-shopping-cart" title="Giỏ hàng"></i>
+
+                    <span id="cart-count" style="
+                        position: absolute;
+                        top: -8px;
+                        right: -10px;
+                        background: red;
+                        color: white;
+                        border-radius: 50%;
+                        padding: 2px 6px;
+                        font-size: 12px;
+                        /* Nếu giỏ hàng trống thì ẩn đi, có hàng thì hiện inline-block */
+                        display: {{ $totalQuantity > 0 ? 'inline-block' : 'none' }};
+                    ">
+                        {{ $totalQuantity }}
+                    </span>
+                </div>
             </div>
 
             <div class="auth-buttons">
@@ -449,8 +474,8 @@
     <section class="products">
         @forelse($products as $product)
 
-        <a href="{{ route('product.show', $product->id) }}" style="text-decoration:none; color:inherit;">
-            <div class="product-card">
+        <div class="product-card">
+            <a href="{{ route('product.show', $product->id) }}" style="text-decoration:none; color:inherit;">
                 <div class="product-image">
                     <div class="badge">MỚI</div>
                     <img src="{{ asset($product->image) }}" alt="{{ $product->name }}">
@@ -467,10 +492,10 @@
                         </span>
                     </div>
 
-                    <button class="btn-add">Thêm vào giỏ</button>
+                    <button class="btn-add" onclick="addToCart(event, {{ $product->id }})">Thêm vào giỏ</button>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
 
         @empty
         <p style="grid-column: span 4; text-align: center; color: #64748b; padding: 20px;">
@@ -492,7 +517,34 @@
             <i class="fab fa-twitter"></i>
         </div>
     </footer>
+    <script>
+    function addToCart(event, productId) {
+        event.preventDefault();
+        event.stopPropagation();
 
+        fetch('/add-to-cart/' + productId, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Luôn hiện thông báo (dù thành công hay đã có trong giỏ)
+            alert(data.message);
+
+            // CHỈ cập nhật số trên Navbar nếu success là true
+            if (data.success) {
+                let badge = document.getElementById('cart-count');
+                if (badge) {
+                    badge.innerText = data.cartCount;
+                    badge.style.display = 'inline-block';
+                }
+            }
+        })
+        .catch(error => console.error('Lỗi:', error));
+    }
+    </script>
 </body>
-
 </html>

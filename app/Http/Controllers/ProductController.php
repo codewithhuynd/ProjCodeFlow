@@ -40,4 +40,34 @@ class ProductController extends Controller
 
     return view('auth.home', compact('products'));
 }
+    public function addToCart($id)
+    {
+        $cart = session()->get('cart', []);
+
+        // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+        if (isset($cart[$id])) {
+            return response()->json([
+                'success' => false, // Gửi về false để JS biết là không thành công
+                'alreadyInCart' => true,
+                'message' => 'Sản phẩm này đã được thêm vào giỏ hàng trước đó!'
+            ]);
+        }
+
+        // Nếu chưa có thì mới lấy thông tin sản phẩm và thêm vào
+        $product = Product::findOrFail($id);
+        $cart[$id] = [
+            "name" => $product->name,
+            "price" => $product->price,
+            "image" => $product->image,
+            "quantity" => 1 // Mặc định là 1 và không tăng thêm ở các lần bấm sau
+        ];
+
+        session()->put('cart', $cart);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thêm vào giỏ hàng thành công!',
+            'cartCount' => array_sum(array_column($cart, 'quantity'))
+        ]);
+    }
 }

@@ -211,7 +211,32 @@
             </div>
 
             <a href="/cart" class="action-item">
-                <i class="fas fa-shopping-cart"></i>
+                @php
+                    $cart = session('cart', []);
+                    $totalQuantity = 0;
+                    foreach ($cart as $item) {
+                        $totalQuantity += $item['quantity'];
+                    }
+                @endphp
+
+                <div style="position: relative; display:inline-block;">
+                    <i class="fas fa-shopping-cart"></i>
+
+                    @if($totalQuantity > 0)
+                        <span id="cart-count" style="
+                            position: absolute;
+                            top: -8px;
+                            right: -10px;
+                            background: red;
+                            color: white;
+                            border-radius: 50%;
+                            padding: 2px 6px;
+                            font-size: 12px;
+                        ">
+                            {{ $totalQuantity }}
+                        </span>
+                    @endif
+                </div>
                 <span>Giỏ hàng</span>
             </a>
             
@@ -286,7 +311,7 @@
                 </div>
 
                 <div class="actions">
-                    <button class="add-cart">THÊM VÀO GIỎ HÀNG</button>
+                    <button class="add-cart" onclick="addToCart({{ $product->id }})">THÊM VÀO GIỎ HÀNG</button>
                     <button class="buy-now">MUA NGAY</button>
                 </div>
             </div>
@@ -318,6 +343,30 @@
             let allBtns = document.querySelectorAll(groupClass);
             allBtns.forEach(btn => btn.classList.remove('active'));
             clickedBtn.classList.add('active');
+        }
+        function addToCart(productId) {
+            fetch(`/add-to-cart/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                // Hiển thị thông báo trả về từ Controller
+                alert(data.message);
+
+                // Chỉ cập nhật badge số lượng nếu thêm mới thành công (success: true)
+                if (data.success) {
+                    let badge = document.getElementById('cart-count');
+                    if (badge) {
+                        badge.innerText = data.cartCount;
+                        badge.style.display = 'inline-block';
+                    }
+                }
+            })
+            .catch(error => console.error('Lỗi:', error));
         }
     </script>
 
