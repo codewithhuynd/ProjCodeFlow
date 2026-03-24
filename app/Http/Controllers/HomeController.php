@@ -3,17 +3,33 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product; // Gọi Model Product ra làm việc
+use App\Models\Product;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // AC1 & AC2: Lấy danh sách sản phẩm và tự động sắp xếp mới nhất (created_at giảm dần)
-        // Dùng take(8) để giới hạn lấy 8 sản phẩm hiển thị cho đẹp
-        $products = Product::latest()->get();
+        // Tạo query builder
+        $products = Product::query();
 
-        // Truyền biến $products ra ngoài giao diện
+        // Kiểm tra tham số sort từ URL
+        if ($request->sort == 'price_asc') {
+            // Giá thấp -> cao
+            $products->orderBy('price', 'asc');
+        } 
+        elseif ($request->sort == 'price_desc') {
+            // Giá cao -> thấp
+            $products->orderBy('price', 'desc');
+        } 
+        else {
+            // Mặc định: sản phẩm mới nhất
+            $products->latest();
+        }
+
+        // Lấy dữ liệu
+        $products = $products->get();
+
+        // Trả về view trang chủ
         return view('auth.home', compact('products'));
     }
 }
