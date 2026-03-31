@@ -104,6 +104,47 @@
         .icons i:hover {
             color: #93c5fd;
         }
+        .filter-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .filter-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 30px;
+            background-color: #ffffff;
+            min-width: 220px;
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .filter-content.show {
+            display: block;
+        }
+
+        .filter-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+
+        .filter-content a:last-child {
+            border-bottom: none;
+        }
+
+        .filter-content a:hover {
+            background-color: #f8fafc;
+            color: #1e3a8a;
+            font-weight: bold;
+        }
 
         /* Nút Đăng nhập / Đăng ký / Đăng xuất */
         .auth-buttons {
@@ -417,12 +458,25 @@
         }
         @endphp
 
-        <div class="icons">
-            <i class="fas fa-filter" title="Bộ lọc"></i>
+        <div class="icons" style="display: flex; align-items: center; gap: 20px;">
+            <div class="filter-dropdown">
+                <i class="fas fa-filter" title="Bộ lọc" onclick="toggleFilter()" style="cursor: pointer;"></i>
+                
+                <div id="myFilterDropdown" class="filter-content">
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}">
+                        Sắp xếp giá tăng dần
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}">
+                        Sắp xếp giá giảm dần
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => null]) }}">
+                        Mặc định
+                    </a>
+                </div>
+            </div>
 
             <div style="position: relative; display:inline-block;">
                 <i class="fas fa-shopping-cart" title="Giỏ hàng"></i>
-
                 <span id="cart-count" style="
                         position: absolute;
                         top: -8px;
@@ -432,7 +486,6 @@
                         border-radius: 50%;
                         padding: 2px 6px;
                         font-size: 12px;
-                        /* Nếu giỏ hàng trống thì ẩn đi, có hàng thì hiện inline-block */
                         display: {{ $totalQuantity > 0 ? 'inline-block' : 'none' }};
                     ">
                     {{ $totalQuantity }}
@@ -486,25 +539,7 @@
         </div>
         <a href="#" class="flash-sale-link">Xem tất cả &rarr;</a>
     </div>
-    <div class="sort-bar">
-        <form method="GET" action="{{ route('home') }}">
-            <select name="sort" onchange="this.form.submit()">
-
-                <option value="">Sắp xếp theo giá</option>
-
-                <option value="price_asc"
-                    {{ request('sort') == 'price_asc' ? 'selected' : '' }}>
-                    Giá: Thấp → Cao
-                </option>
-
-                <option value="price_desc"
-                    {{ request('sort') == 'price_desc' ? 'selected' : '' }}>
-                    Giá: Cao → Thấp
-                </option>
-
-            </select>
-        </form>
-    </div>
+    
     <section class="products">
         @forelse($products as $product)
 
@@ -578,6 +613,21 @@
                     }
                 })
                 .catch(error => console.error('Lỗi:', error));
+        }
+        function toggleFilter() {
+            document.getElementById("myFilterDropdown").classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.fa-filter')) {
+                var dropdowns = document.getElementsByClassName("filter-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
         }
     </script>
 </body>
