@@ -17,26 +17,25 @@ class ProductController extends Controller
     public function search(Request $request)
 {
     $query = $request->input('query');
+    $sort = $request->input('sort');
 
     // Nếu người dùng không nhập gì mà bấm tìm kiếm thì trả về trang chủ (chống lỗi)
     if (empty($query)) {
         return redirect()->route('home'); // Hoặc trả về redirect()->back();
     }
 
-    $products = Product::where(function ($q) use ($query) {
+    $productsQuery = Product::where(function ($q) use ($query) {
         $q->where('name', 'LIKE', $query . ' %')          
           ->orWhere('name', 'LIKE', '% ' . $query . ' %') 
           ->orWhere('name', 'LIKE', '% ' . $query)
           ->orWhere('name', '=', $query);
-    })
-    // // Tương tự cho phần mô tả (nếu muốn tìm cả trong description)
-    // ->orWhere(function ($q) use ($query) {
-    //     $q->where('description', 'LIKE', $query . ' %')
-    //       ->orWhere('description', 'LIKE', '% ' . $query . ' %')
-    //       ->orWhere('description', 'LIKE', '% ' . $query)
-    //       ->orWhere('description', '=', $query);
-    // })
-    ->get();
+    });
+    if ($sort == 'price_asc'){
+        $productsQuery->orderBy('price', 'asc');
+    } elseif ($sort == 'price_desc'){
+        $productsQuery->orderBy('price', 'desc');
+    }
+    $products = $productsQuery->get();
 
     return view('auth.home', compact('products'));
 }
