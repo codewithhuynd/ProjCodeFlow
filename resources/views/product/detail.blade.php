@@ -176,8 +176,51 @@
             font-weight: bold;
             cursor: pointer;
         }
+        /* Khung ngoài của Popup */
+        .cart-popup { 
+            display: none; 
+            position: absolute; 
+            right: 0; 
+            top: 40px; 
+            width: 360px; /* Rộng hơn một chút để chứa đủ nút tăng giảm và giá */
+            background-color: #ffffff; 
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2); 
+            border-radius: 8px; 
+            z-index: 1000; 
+            padding: 10px; 
+            max-height: 450px; 
+            overflow-y: auto; 
+            text-align: left;
+            cursor: default; /* Tránh bị dính hiệu ứng con trỏ trỏ vào link của thẻ cha */
+        }
         
-        .stock { margin-top: 15px; color: #22c55e; font-weight: 500; font-size: 14px; }
+        .cart-popup.show { 
+            display: block; 
+        }
+        
+        .empty-cart-msg { 
+            text-align: center; 
+            padding: 20px; 
+            font-size: 14px; 
+            color: #64748b; 
+        }
+        .cart-item { display: flex; align-items: center; gap: 10px; padding: 12px 10px; border-bottom: 1px solid #f1f5f9; }
+        .cart-item-checkbox { width: 16px; height: 16px; cursor: pointer; }
+        .cart-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #e2e8f0; }
+        .cart-item-info { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+        .cart-item-name { font-size: 13px; font-weight: 600; color: #1e3a8a; }
+        .cart-item-price { font-size: 13px; color: #ef4444; font-weight: bold; }
+        .cart-qty-controls { display: flex; align-items: center; gap: 5px; }
+        .cart-qty-btn { width: 20px; height: 20px; text-align: center; border: 1px solid #ccc; background: #fff; cursor: pointer; border-radius: 3px; line-height: 18px; }
+        .cart-qty-input { width: 30px; text-align: center; border: 1px solid #ccc; height: 20px; font-size: 12px; }
+        
+        .cart-footer { padding: 15px 10px; border-top: 2px solid #e2e8f0; display: flex; flex-direction: column; gap: 10px; }
+        .cart-total-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; color: #333; }
+        .btn-order-dummy { background: #1e3a8a; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center; }
+        .cart-total-row span {
+            font-size: 15px !important;
+            text-transform: none !important;
+        }
     </style>
 </head>
 
@@ -210,35 +253,27 @@
                 <span>Bộ lọc</span>
             </div>
 
-            <a href="/cart" class="action-item">
-                @php
-                    $cart = session('cart', []);
-                    $totalQuantity = 0;
-                    foreach ($cart as $item) {
-                        $totalQuantity += $item['quantity'];
-                    }
-                @endphp
-
-                <div style="position: relative; display:inline-block;">
-                    <i class="fas fa-shopping-cart"></i>
-
-                    @if($totalQuantity > 0)
-                        <span id="cart-count" style="
-                            position: absolute;
-                            top: -8px;
-                            right: -10px;
-                            background: red;
-                            color: white;
-                            border-radius: 50%;
-                            padding: 2px 6px;
-                            font-size: 12px;
-                        ">
+            @php
+                $totalQuantity = 0;
+                if(Auth::check()) {
+                    $totalQuantity = \App\Models\Cart::where('user_id', Auth::id())->sum('quantity');
+                }
+            @endphp
+            <div id="cart-wrapper" class="action-item" style="position: relative; cursor: pointer;">
+                <div onclick="toggleCartPopup(event)" style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                    <div style="position: relative; display:inline-block;">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count" style="position: absolute; top: -8px; right: -10px; background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; display: {{ $totalQuantity > 0 ? 'inline-block' : 'none' }};">
                             {{ $totalQuantity }}
                         </span>
-                    @endif
+                    </div>
+                    <span>Giỏ hàng</span>
                 </div>
-                <span>Giỏ hàng</span>
-            </a>
+                
+                <div id="cart-popup" class="cart-popup" style="top: 50px;">
+                    <div id="cart-items-container"></div>
+                </div>
+            </div>
             
             <div class="auth-buttons">
                 @auth
@@ -345,28 +380,134 @@
             clickedBtn.classList.add('active');
         }
         function addToCart(productId) {
+            // Lấy số lượng từ ô input (id="qty")
+            let quantity = parseInt(document.getElementById('qty').value);
+
             fetch(`/add-to-cart/${productId}`, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({ quantity: quantity }) // Gửi số lượng lên server
             })
             .then(res => res.json())
             .then(data => {
-                // Hiển thị thông báo trả về từ Controller
                 alert(data.message);
-
-                // Chỉ cập nhật badge số lượng nếu thêm mới thành công (success: true)
                 if (data.success) {
                     let badge = document.getElementById('cart-count');
                     if (badge) {
                         badge.innerText = data.cartCount;
                         badge.style.display = 'inline-block';
                     }
+                    // Nếu popup đang mở thì tải lại dữ liệu luôn
+                    if(document.getElementById('cart-popup').classList.contains('show')) {
+                        loadCartItems();
+                    }
                 }
+            }).catch(error => console.error('Lỗi:', error));
+        }
+        function toggleCartPopup(event) {
+            if(event) event.stopPropagation();
+            const popup = document.getElementById('cart-popup');
+            popup.classList.toggle('show');
+            if (popup.classList.contains('show')) loadCartItems();
+        }
+
+        function loadCartItems() {
+            const container = document.getElementById('cart-items-container');
+            container.innerHTML = '<div class="empty-cart-msg">Đang tải...</div>';
+
+            fetch('/cart-details')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        container.innerHTML = '<div class="empty-cart-msg">Giỏ hàng trống</div>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    data.forEach(item => {
+                        let product = item.product;
+                        let imageSrc = product.image.startsWith('http') ? product.image : `/${product.image}`;
+                        
+                        html += `
+                            <div class="cart-item">
+                                <input type="checkbox" class="cart-item-checkbox" id="cart-check-${item.id}" data-price="${product.price}" data-qty="${item.quantity}" onchange="calculateTotal()">
+                                <img src="${imageSrc}" alt="${product.name}">
+                                <div class="cart-item-info">
+                                    <div class="cart-item-name">${product.name}</div>
+                                    <div class="cart-item-price">${new Intl.NumberFormat('vi-VN').format(product.price)}đ</div>
+                                    <div class="cart-qty-controls">
+                                        <button class="cart-qty-btn" onclick="updatePopupQty(${item.id}, 'decrease')">-</button>
+                                        <input type="text" class="cart-qty-input" id="cart-qty-${item.id}" value="${item.quantity}" readonly>
+                                        <button class="cart-qty-btn" onclick="updatePopupQty(${item.id}, 'increase')">+</button>
+                                    </div>
+                                </div>
+                            </div>`;
+                    });
+
+                    // Thêm phần Footer (Tổng tiền + Nút đặt hàng tượng trưng)
+                    html += `
+                        <div class="cart-footer">
+                            <div class="cart-total-row">
+                                <span>Tổng tiền dự kiến:</span>
+                                <span id="cart-total-price" style="color: #ef4444;">0đ</span>
+                            </div>
+                            <button class="btn-order-dummy" onclick="alert('Đang chuyển sang trang Thanh toán...')">ĐẶT HÀNG NGAY</button>
+                        </div>
+                    `;
+                    
+                    container.innerHTML = html;
+                });
+        }
+
+        // Cập nhật số lượng khi bấm +/- trong popup
+        function updatePopupQty(cartId, action) {
+            let qtyInput = document.getElementById('cart-qty-' + cartId);
+            let checkbox = document.getElementById('cart-check-' + cartId);
+            let currentQty = parseInt(qtyInput.value);
+
+            let newQty = currentQty;
+            if (action === 'increase') newQty++;
+            else if (action === 'decrease' && currentQty > 1) newQty--;
+
+            if (newQty === currentQty) return;
+
+            fetch('/update-cart', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cart_id: cartId, action: action })
             })
-            .catch(error => console.error('Lỗi:', error));
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    let badge = document.getElementById('cart-count');
+                    if (badge) badge.innerText = data.cartCount;
+                    
+                    qtyInput.value = newQty;
+                    if (checkbox) checkbox.setAttribute('data-qty', newQty);
+                    
+                    calculateTotal();
+                }
+            });
+        }
+
+        // Tính tổng tiền dựa trên các ô checkbox được tick
+        function calculateTotal() {
+            let total = 0;
+            let checkboxes = document.querySelectorAll('.cart-item-checkbox:checked');
+            
+            checkboxes.forEach(box => {
+                let price = parseFloat(box.getAttribute('data-price'));
+                let qty = parseInt(box.getAttribute('data-qty'));
+                total += price * qty;
+            });
+
+            document.getElementById('cart-total-price').innerText = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
         }
     </script>
 

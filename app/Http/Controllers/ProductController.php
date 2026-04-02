@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -39,34 +41,66 @@ class ProductController extends Controller
 
     return view('auth.home', compact('products'));
 }
-    public function addToCart($id)
+    // Thêm vào giỏ hàng (cộng dồn số lượng nếu đã có)
+    public function addToCart(Request $request, $id)
     {
-        $cart = session()->get('cart', []);
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Bạn cần đăng nhập để thêm giỏ hàng!']);
+        }
 
-        // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-        if (isset($cart[$id])) {
-            return response()->json([
-                'success' => false, // Gửi về false để JS biết là không thành công
-                'alreadyInCart' => true,
-                'message' => 'Sản phẩm này đã được thêm vào giỏ hàng trước đó!'
+        $userId = Auth::id();
+        $quantity = $request->input('quantity', 1); // Lấy số lượng gửi lên, mặc định là 1
+
+        // Kiểm tra xem sản phẩm đã có trong giỏ của user này chưa
+        $cartItem = Cart::where('user_id', $userId)->where('product_id', $id)->first();
+
+        if ($cartItem) {
+            $cartItem->quantity += $quantity;
+            $cartItem->save();
+        } else {
+            Cart::create([
+                'user_id' => $userId,
+                'product_id' => $id,
+                'quantity' => $quantity
             ]);
         }
 
-        // Nếu chưa có thì mới lấy thông tin sản phẩm và thêm vào
-        $product = Product::findOrFail($id);
-        $cart[$id] = [
-            "name" => $product->name,
-            "price" => $product->price,
-            "image" => $product->image,
-            "quantity" => 1 // Mặc định là 1 và không tăng thêm ở các lần bấm sau
-        ];
-
-        session()->put('cart', $cart);
+        $totalQuantity = Cart::where('user_id', $userId)->sum('quantity');
 
         return response()->json([
             'success' => true,
-            'message' => 'Thêm vào giỏ hàng thành công!',
-            'cartCount' => array_sum(array_column($cart, 'quantity'))
+            'message' => 'Đã thêm vào giỏ hàng!',
+            'cartCount' => $totalQuantity
         ]);
+    }
+
+    // Lấy dữ liệu giỏ hàng để hiển thị lên popup
+    public function getCartDetails()
+    {
+        if (!Auth::check()) return response()->json([]);
+
+        // Lấy danh sách giỏ hàng kèm thông tin sản phẩm
+        $carts = Cart::with('product')->where('user_id', Auth::id())->get();
+        return response()->json($carts);
+    }
+
+    // Cập nhật số lượng (+ / -) ngay trong popup
+    public function updateCart(Request $request)
+    {
+        $cartId = $request->input('cart_id');
+        $action = $request->input('action'); // 'increase' hoặc 'decrease'
+
+        $cartItem = Cart::find($cartId);
+        if ($cartItem) {
+            if ($action == 'increase') {
+                $cartItem->quantity += 1;
+            } elseif ($action == 'decrease' && $cartItem->quantity > 1) {
+                $cartItem->quantity -= 1;
+            }
+            $cartItem->save();
+        }
+
+        $totalQuantity = Cart::where('user_id', Auth::id())->sum('quantity');
+        return response()->json(['success' => true, 'cartCount' => $totalQuantity]);
     }
 }
