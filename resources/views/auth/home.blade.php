@@ -534,30 +534,43 @@
             </div>
         </div>
 
-        <div class="auth-buttons">
-            @auth
-            @if(Auth::user()->is_admin)
+        <div class="auth-buttons" style="display: flex; align-items: center; gap: 15px;">
+    @auth
+        @if(Auth::user()->is_admin)
             <span style="font-size: 14px; color: #ef4444;">Đang dùng quyền Quản trị</span>
             <a href="/admin/dashboard" style="background-color: #1e3a8a; color: white; padding: 6px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px;">
                 Vào Trang Admin
             </a>
-            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                @csrf
-                <button type="submit" class="btn-logout">Đăng xuất</button>
-            </form>
-            @else
-            <span style="font-size: 14px; color: #93c5fd;">Chào <strong>{{ Auth::user()->name }}</strong></span>
-            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                @csrf
-                <button type="submit" class="btn-logout">Đăng xuất</button>
-            </form>
-            @endif
+            
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
+                    @csrf
+                    <button type="submit" class="btn-logout" style="width: 100%;">Đăng xuất</button>
+                </form>
+                <a href="{{ route('password.change') }}" style="color: #bfdbfe; font-size: 12px; text-decoration: underline; margin-top: 5px;">
+                    Đổi mật khẩu?
+                </a>
+            </div>
 
-            @else
-            <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
-            <a href="/register" class="btn-register">Đăng ký</a>
-            @endauth
-        </div>
+        @else
+            <span style="font-size: 14px; color: #93c5fd;">Chào <strong>{{ Auth::user()->name }}</strong></span>
+            
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
+                    @csrf
+                    <button type="submit" class="btn-logout" style="width: 100%;">Đăng xuất</button>
+                </form>
+                <a href="{{ route('password.change') }}" style="color: #bfdbfe; font-size: 12px; text-decoration: underline; margin-top: 5px;">
+                    Bạn muốn đổi mật khẩu?
+                </a>
+            </div>
+        @endif
+
+    @else
+        <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
+        <a href="/register" class="btn-register">Đăng ký</a>
+    @endauth
+</div>
         </div>
     </header>
 

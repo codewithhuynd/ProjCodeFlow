@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProfileController;
 
 //trang đăng ký
 Route::get('/register',[RegisterController::class,'showRegister']);
@@ -58,3 +59,9 @@ Route::get('/search', [ProductController::class, 'search'])->name('products.sear
 
 Route::get('/cart-details', [ProductController::class, 'getCartDetails'])->name('cart.details');
 Route::post('/update-cart', [ProductController::class, 'updateCart'])->name('update.cart');
+
+// --- KHU VỰC DÀNH CHO NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP ---
+Route::middleware('auth')->group(function () {
+    Route::get('/change-password', [ProfileController::class, 'changePasswordForm'])->name('password.change');
+    Route::post('/change-password', [ProfileController::class, 'updatePassword'])->name('password.update');
+});
