@@ -276,18 +276,26 @@
             </div>
             
             <div class="auth-buttons">
-                @auth
-                    <div class="user-info">
-                        @if(Auth::user()->is_admin)
-                            <span style="color: #ff4d4d;"></span><br>
-                        @endif
-                        <strong>{{ Auth::user()->name }}</strong>
+              @auth
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="user-info">
+                            @if(Auth::user()->is_admin)
+                                <span style="color: #ff4d4d; font-size: 10px; display: block;">ADMIN</span>
+                            @endif
+                            <strong>{{ Auth::user()->name }}</strong>
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                            <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                                @csrf
+                                <button type="submit" class="btn-logout-white">ĐĂNG XUẤT</button>
+                            </form>
+                            
+                            <a href="{{ route('password.change') }}" style="color: #bfdbfe; font-size: 11px; text-decoration: underline; font-weight: 500;">
+                                Đổi mật khẩu?
+                            </a>
+                        </div>
                     </div>
-                    
-                    <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
-                        @csrf
-                        <button type="submit" class="btn-logout-white">ĐĂNG XUẤT</button>
-                    </form>
                 @else
                     <a href="{{ route('login') }}" class="action-item">
                         <i class="fas fa-user"></i>

@@ -5,11 +5,13 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
 
 class ProductSeeder extends Seeder
 {
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
         // Xóa dữ liệu cũ
         DB::table('products')->truncate();
 
@@ -115,5 +117,6 @@ class ProductSeeder extends Seeder
         ];
 
         DB::table('products')->insert($products);
+        Schema::enableForeignKeyConstraints();
     }
 }
