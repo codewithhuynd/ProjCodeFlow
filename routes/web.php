@@ -55,3 +55,6 @@ Route::prefix('admin')->group(function () {
 });
 //Trang tìm kiếm sản phẩm
 Route::get('/search', [ProductController::class, 'search'])->name('products.search');
+
+Route::get('/cart-details', [ProductController::class, 'getCartDetails'])->name('cart.details');
+Route::post('/update-cart', [ProductController::class, 'updateCart'])->name('update.cart');
