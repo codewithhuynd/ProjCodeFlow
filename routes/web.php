@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\OrderController;
 
 //trang đăng ký
 Route::get('/register',[RegisterController::class,'showRegister']);
@@ -64,4 +65,18 @@ Route::post('/update-cart', [ProductController::class, 'updateCart'])->name('upd
 Route::middleware('auth')->group(function () {
     Route::get('/change-password', [ProfileController::class, 'changePasswordForm'])->name('password.change');
     Route::post('/change-password', [ProfileController::class, 'updatePassword'])->name('password.update');
+});
+
+
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/checkout', [OrderController::class, 'checkout']);
+
+    Route::post('/place-order', [OrderController::class, 'placeOrder']);
+
+    Route::post('/buy-now', [OrderController::class, 'buyNow']);
+
+    Route::post('/checkout-selected', [OrderController::class, 'checkoutSelected']);
+
 });
