@@ -104,6 +104,7 @@
         .icons i:hover {
             color: #93c5fd;
         }
+
         .filter-dropdown {
             position: relative;
             display: inline-block;
@@ -425,49 +426,132 @@
             font-size: 14px;
             cursor: pointer;
         }
-        
+
         /* Khung ngoài của Popup */
-        .cart-popup { 
-            display: none; 
-            position: absolute; 
-            right: 0; 
-            top: 40px; 
-            width: 360px; /* Rộng hơn một chút để chứa đủ nút tăng giảm và giá */
-            background-color: #ffffff; 
-            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2); 
-            border-radius: 8px; 
-            z-index: 1000; 
-            padding: 10px; 
-            max-height: 450px; 
-            overflow-y: auto; 
+        .cart-popup {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 40px;
+            width: 360px;
+            /* Rộng hơn một chút để chứa đủ nút tăng giảm và giá */
+            background-color: #ffffff;
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            z-index: 1000;
+            padding: 10px;
+            max-height: 450px;
+            overflow-y: auto;
             text-align: left;
-            cursor: default; /* Tránh bị dính hiệu ứng con trỏ trỏ vào link của thẻ cha */
-        }
-        
-        .cart-popup.show { 
-            display: block; 
-        }
-        
-        .empty-cart-msg { 
-            text-align: center; 
-            padding: 20px; 
-            font-size: 14px; 
-            color: #64748b; 
+            cursor: default;
+            /* Tránh bị dính hiệu ứng con trỏ trỏ vào link của thẻ cha */
         }
 
-        .cart-item { display: flex; align-items: center; gap: 10px; padding: 12px 10px; border-bottom: 1px solid #f1f5f9; }
-        .cart-item-checkbox { width: 16px; height: 16px; cursor: pointer; }
-        .cart-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #e2e8f0; }
-        .cart-item-info { flex: 1; display: flex; flex-direction: column; gap: 5px; }
-        .cart-item-name { font-size: 13px; font-weight: 600; color: #1e3a8a; }
-        .cart-item-price { font-size: 13px; color: #ef4444; font-weight: bold; }
-        .cart-qty-controls { display: flex; align-items: center; gap: 5px; }
-        .cart-qty-btn { width: 20px; height: 20px; text-align: center; border: 1px solid #ccc; background: #fff; cursor: pointer; border-radius: 3px; line-height: 18px; }
-        .cart-qty-input { width: 30px; text-align: center; border: 1px solid #ccc; height: 20px; font-size: 12px; }
-        
-        .cart-footer { padding: 15px 10px; border-top: 2px solid #e2e8f0; display: flex; flex-direction: column; gap: 10px; }
-        .cart-total-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; color: #333; }
-        .btn-order-dummy { background: #1e3a8a; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center; }
+        .cart-popup.show {
+            display: block;
+        }
+
+        .empty-cart-msg {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 10px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .cart-item-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .cart-item-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .cart-item-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+
+        .cart-item-price {
+            font-size: 13px;
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .cart-qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cart-qty-btn {
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+            border-radius: 3px;
+            line-height: 18px;
+        }
+
+        .cart-qty-input {
+            width: 30px;
+            text-align: center;
+            border: 1px solid #ccc;
+            height: 20px;
+            font-size: 12px;
+        }
+
+        .cart-footer {
+            padding: 15px 10px;
+            border-top: 2px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .btn-order-dummy {
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+
         .cart-total-row span {
             font-size: 15px !important;
             text-transform: none !important;
@@ -476,6 +560,11 @@
 </head>
 
 <body>
+    @if(session('success'))
+    <script>
+        alert("{{ session('success') }}")
+    </script>
+    @endif
     <header>
         <div class="logo-nav">
             <img src="/images/logo.png" height="40">
@@ -498,16 +587,16 @@
         </form>
 
         @php
-            $totalQuantity = 0;
-            if(Auth::check()) {
-                $totalQuantity = \App\Models\Cart::where('user_id', Auth::id())->sum('quantity');
-            }
+        $totalQuantity = 0;
+        if(Auth::check()) {
+        $totalQuantity = \App\Models\Cart::where('user_id', Auth::id())->sum('quantity');
+        }
         @endphp
 
         <div class="icons" style="display: flex; align-items: center; gap: 20px;">
             <div class="filter-dropdown">
                 <i class="fas fa-filter" title="Bộ lọc" onclick="toggleFilter()" style="cursor: pointer;"></i>
-                
+
                 <div id="myFilterDropdown" class="filter-content">
                     <a href="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}">
                         Sắp xếp giá tăng dần
@@ -535,13 +624,13 @@
         </div>
 
         <div class="auth-buttons" style="display: flex; align-items: center; gap: 15px;">
-    @auth
-        @if(Auth::user()->is_admin)
+            @auth
+            @if(Auth::user()->is_admin)
             <span style="font-size: 14px; color: #ef4444;">Đang dùng quyền Quản trị</span>
             <a href="/admin/dashboard" style="background-color: #1e3a8a; color: white; padding: 6px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px;">
                 Vào Trang Admin
             </a>
-            
+
             <div style="display: flex; flex-direction: column; align-items: center;">
                 <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
                     @csrf
@@ -552,9 +641,9 @@
                 </a>
             </div>
 
-        @else
+            @else
             <span style="font-size: 14px; color: #93c5fd;">Chào <strong>{{ Auth::user()->name }}</strong></span>
-            
+
             <div style="display: flex; flex-direction: column; align-items: center;">
                 <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
                     @csrf
@@ -564,13 +653,13 @@
                     Bạn muốn đổi mật khẩu?
                 </a>
             </div>
-        @endif
+            @endif
 
-    @else
-        <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
-        <a href="/register" class="btn-register">Đăng ký</a>
-    @endauth
-</div>
+            @else
+            <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
+            <a href="/register" class="btn-register">Đăng ký</a>
+            @endauth
+        </div>
         </div>
     </header>
 
@@ -593,7 +682,7 @@
         </div>
         <a href="#" class="flash-sale-link">Xem tất cả &rarr;</a>
     </div>
-    
+
     <section class="products">
         @forelse($products as $product)
 
@@ -651,7 +740,9 @@
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ quantity: 1 }) // Mặc định thêm 1
+                    body: JSON.stringify({
+                        quantity: 1
+                    }) // Mặc định thêm 1
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -665,6 +756,7 @@
                     }
                 }).catch(error => console.error('Lỗi:', error));
         }
+
         function toggleFilter() {
             document.getElementById("myFilterDropdown").classList.toggle("show");
         }
@@ -680,8 +772,9 @@
                 }
             }
         }
+
         function toggleCartPopup(event) {
-            if(event) event.stopPropagation();
+            if (event) event.stopPropagation();
             const popup = document.getElementById('cart-popup');
             popup.classList.toggle('show');
             if (popup.classList.contains('show')) loadCartItems();
@@ -698,12 +791,12 @@
                         container.innerHTML = '<div class="empty-cart-msg">Giỏ hàng trống</div>';
                         return;
                     }
-                    
+
                     let html = '';
                     data.forEach(item => {
                         let product = item.product;
                         let imageSrc = product.image.startsWith('http') ? product.image : `/${product.image}`;
-                        
+
                         html += `
                             <div class="cart-item">
                                 <input type="checkbox" class="cart-item-checkbox" id="cart-check-${item.id}" data-price="${product.price}" data-qty="${item.quantity}" onchange="calculateTotal()">
@@ -727,10 +820,10 @@
                                 <span>Tổng tiền dự kiến:</span>
                                 <span id="cart-total-price" style="color: #ef4444;">0đ</span>
                             </div>
-                            <button class="btn-order-dummy" onclick="alert('Đang chuyển sang trang Thanh toán...')">ĐẶT HÀNG NGAY</button>
+                            <button class="btn-order-dummy" onclick="goToCheckout()">ĐẶT HÀNG NGAY</button>
                         </div>
                     `;
-                    
+
                     container.innerHTML = html;
                 });
         }
@@ -748,31 +841,34 @@
             if (newQty === currentQty) return;
 
             fetch('/update-cart', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ cart_id: cartId, action: action })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    let badge = document.getElementById('cart-count');
-                    if (badge) badge.innerText = data.cartCount;
-                    
-                    qtyInput.value = newQty;
-                    if (checkbox) checkbox.setAttribute('data-qty', newQty);
-                    
-                    calculateTotal();
-                }
-            });
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        cart_id: cartId,
+                        action: action
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        let badge = document.getElementById('cart-count');
+                        if (badge) badge.innerText = data.cartCount;
+
+                        qtyInput.value = newQty;
+                        if (checkbox) checkbox.setAttribute('data-qty', newQty);
+
+                        calculateTotal();
+                    }
+                });
         }
         // Tính tổng tiền dựa trên các ô checkbox được tick
         function calculateTotal() {
             let total = 0;
             let checkboxes = document.querySelectorAll('.cart-item-checkbox:checked');
-            
+
             checkboxes.forEach(box => {
                 let price = parseFloat(box.getAttribute('data-price'));
                 let qty = parseInt(box.getAttribute('data-qty'));
@@ -780,6 +876,37 @@
             });
 
             document.getElementById('cart-total-price').innerText = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
+        }
+
+        function goToCheckout() {
+            let selected = [];
+
+            document.querySelectorAll('.cart-item-checkbox:checked').forEach(box => {
+                let id = box.id.replace('cart-check-', '');
+                selected.push(id);
+            });
+
+            if (selected.length === 0) {
+                alert("Bạn chưa chọn sản phẩm!");
+                return;
+            }
+
+            fetch('/checkout-selected', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        selected: selected
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/checkout';
+                    }
+                });
         }
     </script>
 </body>
