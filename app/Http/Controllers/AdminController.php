@@ -18,22 +18,21 @@ class AdminController extends Controller
 
     public function login(Request $request) //Nhận dữ liệu từ form (email, password)
     {
-        $credentials = $request->only('email','password'); //lấy đúng 2 trường email và passwor
+        $credentials = $request->only('email','password');
 
-        if(Auth::attempt($credentials)) //Laravel kiểm tra xem email + password có đúng trong database không
+        if(Auth::attempt($credentials)) 
         {
-            if(Auth::user()->is_admin) //nếu đúng trong database thì kiểm tra thêm điều kiện này nữa
+            if(Auth::user()->is_admin) 
             {
-                return redirect('/admin/dashboard'); //rồi mới tới trang admin
+                return redirect('/admin/dashboard'); 
             }
 
-            Auth::logout(); //nếu sai thì gọi hàm logout được đ/n bên dưới và báo lỗi
+            Auth::logout(); 
             return back()->with('error','Bạn không phải admin');
         }
 
-        return back()->with('error','Sai email hoặc mật khẩu'); //báo lỗi
+        return back()->with('error','Sai email hoặc mật khẩu'); 
     }
-
 
     public function dashboard()
     {
@@ -50,7 +49,7 @@ class AdminController extends Controller
         ));
     }
 
-    public function logout()//Xóa thông tin đăng nhập khỏi session (giống như bộ nhớ tạm- để nhớ những gì người dùng nhập), sau đó quay về trang login
+    public function logout()
     {
         Auth::logout();
         return redirect('/admin/login');
@@ -58,54 +57,78 @@ class AdminController extends Controller
 
     public function manageProducts()
     {
-    // Lấy toàn bộ sản phẩm từ Database, sắp xếp mới nhất lên đầu
-    $products = Product::orderBy('id', 'desc')->get(); 
-    
-    // Trả về view và truyền biến $products sang
-    return view('admin.products', compact('products'));
+        // Lấy toàn bộ sản phẩm từ Database, sắp xếp mới nhất lên đầu
+        $products = Product::orderBy('id', 'desc')->get(); 
+        
+        return view('admin.products', compact('products'));
     }
+
     // 1. Hàm Xóa sản phẩm
     public function destroy($id) 
     {
-    $product = Product::findOrFail($id);
-    $product->delete(); // Xóa khỏi DB -> Trang chủ mất luôn sản phẩm này
-    return redirect()->back()->with('success', 'Đã xóa sản phẩm!');
+        $product = Product::findOrFail($id);
+        $product->delete(); 
+        return redirect()->back()->with('success', 'Đã xóa sản phẩm!');
     }
 
-// 2. Hàm hiện trang Sửa
+    // 2. Hàm hiện trang Sửa
     public function edit($id) 
     {
-    $product = Product::findOrFail($id);
-    return view('admin.edit_product', compact('product'));
+        $product = Product::findOrFail($id);
+        return view('admin.edit_product', compact('product'));
     }
 
-// 3. Hàm lưu dữ liệu sau khi Sửa
+    // 3. Hàm lưu dữ liệu sau khi Sửa
     public function update(Request $request, $id) 
     {
-    $product = Product::findOrFail($id);
-    
-    // Cập nhật toàn bộ thông tin mới
-    $product->update([
-        'name' => $request->name,
-        'price' => $request->price,
-        'image' => $request->image,
-        'description' => $request->description, // Đã thêm dòng lưu mô tả
-    ]);
-    
-    return redirect()->route('admin.products')->with('success', 'Cập nhật thành công!');
+        $product = Product::findOrFail($id);
+        
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->stock = $request->stock; // Thêm dòng này để cập nhật Tồn kho
+        $product->description = $request->description;
+
+        // Ưu tiên 1: Cập nhật file ảnh từ máy
+        if ($request->hasFile('image_upload')) {
+            $path = $request->file('image_upload')->store('products', 'public');
+            $product->image = $path;
+        } 
+        // Ưu tiên 2: Cập nhật URL ảnh mới
+        elseif ($request->filled('image')) {
+            $product->image = $request->image;
+        }
+
+        $product->save();
+        
+        return redirect()->route('admin.products')->with('success', 'Cập nhật thành công!');
     }
-    // Hàm Thêm sản phẩm mới
+
+    // 4. Hàm Thêm sản phẩm mới
     public function store(Request $request)
     {
-        Product::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'image' => $request->image,
-            'description' => $request->description,
-            'category_id' => 1, // Vì chưa làm chọn danh mục, gán tạm vào danh mục số 1
-            'slug' => Str::slug($request->name), // Tự động tạo link slug từ tên sản phẩm
-        ]);
+        $product = new Product();
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->stock = $request->stock;
+        $product->description = $request->description;
+        $product->category_id = 1; // Vì chưa làm chọn danh mục, gán tạm vào danh mục số 1
+        $product->slug = Str::slug($request->name); // Tự động tạo link slug từ tên sản phẩm
+
+        // Ưu tiên 1: Tải file từ máy
+        if ($request->hasFile('image_upload')) {
+            $path = $request->file('image_upload')->store('products', 'public');
+            $product->image = $path; 
+        } 
+        // Ưu tiên 2: Nhập URL
+        elseif ($request->filled('image')) {
+            $product->image = $request->image;
+        } 
+        // Dự phòng
+        else {
+            $product->image = 'https://via.placeholder.com/150';
+        }
+
+        $product->save();
 
         return redirect()->route('admin.products')->with('success', 'Đã thêm sản phẩm mới thành công!');
     }
