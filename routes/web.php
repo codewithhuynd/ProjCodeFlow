@@ -8,6 +8,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 //trang đăng ký
 Route::get('/register',[RegisterController::class,'showRegister']);
@@ -80,3 +82,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout-selected', [OrderController::class, 'checkoutSelected']);
 
 });
+
+//QUÊN PASS
+// 1. Link hiển thị form nhập Email (AC 1 & 2)
+Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+
+// 2. Xử lý khi khách bấm nút "Gửi Link" (AC 3)
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+// 3. Link từ trong Email khách bấm vào để tạo pass mới (AC 4)
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+
+// 4. Xử lý lưu mật khẩu mới vào Database (AC 5)
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');

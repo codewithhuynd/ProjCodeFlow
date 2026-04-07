@@ -46,6 +46,12 @@
                     </span>
                 </div>
             </div>
+            
+            <div class="text-right">
+                <a href="{{ route('password.request') }}" class="text-sm font-semibold text-blue-600 hover:underline">
+                    Quên mật khẩu?
+                </a>
+            </div>
 
             <button type="submit" 
                 class="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200">
