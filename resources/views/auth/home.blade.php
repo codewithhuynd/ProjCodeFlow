@@ -690,7 +690,7 @@
             <a href="{{ route('product.show', $product->id) }}" style="text-decoration:none; color:inherit;">
                 <div class="product-image">
                     <div class="badge">MỚI</div>
-                    <img src="{{ asset($product->image) }}" alt="{{ $product->name }}">
+                    <img src="{{ (str_starts_with($product->image, 'http')) ? $product->image : asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
                 </div>
 
                 <div class="product-info">
@@ -795,7 +795,7 @@
                     let html = '';
                     data.forEach(item => {
                         let product = item.product;
-                        let imageSrc = product.image.startsWith('http') ? product.image : `/${product.image}`;
+                        let imageSrc = product.image.startsWith('http') ? product.image : `/storage/${product.image}`;
 
                         html += `
                             <div class="cart-item">

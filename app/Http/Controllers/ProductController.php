@@ -9,49 +9,52 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+    // --- CÁC HÀM DÀNH CHO KHÁCH HÀNG (FRONT-END) ---
+
+    // 1. Xem chi tiết 1 sản phẩm
     public function show($id)
     {
         $product = Product::findOrFail($id);
-
         return view('product.detail', compact('product'));
     }
 
+    // 2. Tìm kiếm và lọc sản phẩm ở trang chủ
     public function search(Request $request)
-{
-    $query = $request->input('query');
-    $sort = $request->input('sort');
+    {
+        $query = $request->input('query');
+        $sort = $request->input('sort');
 
-    // Nếu người dùng không nhập gì mà bấm tìm kiếm thì trả về trang chủ (chống lỗi)
-    if (empty($query)) {
-        return redirect()->route('home'); // Hoặc trả về redirect()->back();
+        if (empty($query)) {
+            return redirect()->route('home');
+        }
+
+        $productsQuery = Product::where(function ($q) use ($query) {
+            $q->where('name', 'LIKE', $query . ' %')          
+              ->orWhere('name', 'LIKE', '% ' . $query . ' %') 
+              ->orWhere('name', 'LIKE', '% ' . $query)
+              ->orWhere('name', '=', $query);
+        });
+
+        if ($sort == 'price_asc'){
+            $productsQuery->orderBy('price', 'asc');
+        } elseif ($sort == 'price_desc'){
+            $productsQuery->orderBy('price', 'desc');
+        }
+
+        $products = $productsQuery->get();
+        return view('auth.home', compact('products'));
     }
 
-    $productsQuery = Product::where(function ($q) use ($query) {
-        $q->where('name', 'LIKE', $query . ' %')          
-          ->orWhere('name', 'LIKE', '% ' . $query . ' %') 
-          ->orWhere('name', 'LIKE', '% ' . $query)
-          ->orWhere('name', '=', $query);
-    });
-    if ($sort == 'price_asc'){
-        $productsQuery->orderBy('price', 'asc');
-    } elseif ($sort == 'price_desc'){
-        $productsQuery->orderBy('price', 'desc');
-    }
-    $products = $productsQuery->get();
+    // --- CÁC HÀM XỬ LÝ GIỎ HÀNG ---
 
-    return view('auth.home', compact('products'));
-}
-    // Thêm vào giỏ hàng (cộng dồn số lượng nếu đã có)
+    // 3. Thêm sản phẩm vào giỏ
     public function addToCart(Request $request, $id)
     {
         if (!Auth::check()) {
-            return response()->json(['success' => false, 'message' => 'Bạn cần đăng nhập để thêm giỏ hàng!']);
+            return response()->json(['success' => false, 'message' => 'Bạn cần đăng nhập!']);
         }
-
         $userId = Auth::id();
-        $quantity = $request->input('quantity', 1); // Lấy số lượng gửi lên, mặc định là 1
-
-        // Kiểm tra xem sản phẩm đã có trong giỏ của user này chưa
+        $quantity = $request->input('quantity', 1);
         $cartItem = Cart::where('user_id', $userId)->where('product_id', $id)->first();
 
         if ($cartItem) {
@@ -59,48 +62,28 @@ class ProductController extends Controller
             $cartItem->save();
         } else {
             Cart::create([
-                'user_id' => $userId,
-                'product_id' => $id,
-                'quantity' => $quantity
+                'user_id' => $userId, 'product_id' => $id, 'quantity' => $quantity
             ]);
         }
-
-        $totalQuantity = Cart::where('user_id', $userId)->sum('quantity');
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Đã thêm vào giỏ hàng!',
-            'cartCount' => $totalQuantity
-        ]);
+        return response()->json(['success' => true, 'message' => 'Đã thêm!', 'cartCount' => Cart::where('user_id', $userId)->sum('quantity')]);
     }
 
-    // Lấy dữ liệu giỏ hàng để hiển thị lên popup
+    // 4. Lấy dữ liệu giỏ hàng hiển thị lên Popup
     public function getCartDetails()
     {
         if (!Auth::check()) return response()->json([]);
-
-        // Lấy danh sách giỏ hàng kèm thông tin sản phẩm
-        $carts = Cart::with('product')->where('user_id', Auth::id())->get();
-        return response()->json($carts);
+        return response()->json(Cart::with('product')->where('user_id', Auth::id())->get());
     }
 
-    // Cập nhật số lượng (+ / -) ngay trong popup
+    // 5. Cập nhật số lượng (+ / -) trong giỏ hàng
     public function updateCart(Request $request)
     {
-        $cartId = $request->input('cart_id');
-        $action = $request->input('action'); // 'increase' hoặc 'decrease'
-
-        $cartItem = Cart::find($cartId);
+        $cartItem = Cart::find($request->cart_id);
         if ($cartItem) {
-            if ($action == 'increase') {
-                $cartItem->quantity += 1;
-            } elseif ($action == 'decrease' && $cartItem->quantity > 1) {
-                $cartItem->quantity -= 1;
-            }
+            if ($request->action == 'increase') $cartItem->quantity += 1;
+            elseif ($request->action == 'decrease' && $cartItem->quantity > 1) $cartItem->quantity -= 1;
             $cartItem->save();
         }
-
-        $totalQuantity = Cart::where('user_id', Auth::id())->sum('quantity');
-        return response()->json(['success' => true, 'cartCount' => $totalQuantity]);
+        return response()->json(['success' => true, 'cartCount' => Cart::where('user_id', Auth::id())->sum('quantity')]);
     }
 }
