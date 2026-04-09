@@ -63,25 +63,7 @@ Route::get('/search', [ProductController::class, 'search'])->name('products.sear
 Route::get('/cart-details', [ProductController::class, 'getCartDetails'])->name('cart.details');
 Route::post('/update-cart', [ProductController::class, 'updateCart'])->name('update.cart');
 
-// --- KHU VỰC DÀNH CHO NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP ---
-Route::middleware('auth')->group(function () {
-    Route::get('/change-password', [ProfileController::class, 'changePasswordForm'])->name('password.change');
-    Route::post('/change-password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
-});
 
-
-
-Route::middleware('auth')->group(function () {
-
-    Route::get('/checkout', [OrderController::class, 'checkout']);
-
-    Route::post('/place-order', [OrderController::class, 'placeOrder']);
-
-    Route::post('/buy-now', [OrderController::class, 'buyNow']);
-
-    Route::post('/checkout-selected', [OrderController::class, 'checkoutSelected']);
-
-});
 
 //QUÊN PASS
 // 1. Link hiển thị form nhập Email (AC 1 & 2)
@@ -96,3 +78,17 @@ Route::get('password/reset/{token}', [ResetPasswordController::class, 'showReset
 // 4. Xử lý lưu mật khẩu mới vào Database (AC 5)
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
+// --- KHU VỰC TỔNG HỢP CHO NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP ---
+Route::middleware('auth')->group(function () {
+    // Chức năng Hồ sơ
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/change-password', [ProfileController::class, 'changePasswordForm'])->name('password.change');
+    Route::post('/change-password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+
+    // Chức năng Đặt hàng
+    Route::get('/checkout', [OrderController::class, 'checkout']);
+    Route::post('/place-order', [OrderController::class, 'placeOrder']);
+    Route::post('/buy-now', [OrderController::class, 'buyNow']);
+    Route::post('/checkout-selected', [OrderController::class, 'checkoutSelected']);
+});

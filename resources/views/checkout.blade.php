@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <title>Thanh toán | GUCO</title>
 
-```
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -118,7 +117,6 @@
         font-weight: bold;
     }
 </style>
-```
 
 </head>
 
@@ -138,10 +136,9 @@
 
     <form method="POST" action="/place-order">
         @csrf
-
-        <input type="text" name="name" placeholder="Họ tên" required>
-        <input type="text" name="phone" placeholder="SĐT" required>
-        <input type="text" name="address" placeholder="Địa chỉ" required>
+        <input type="text" name="name" placeholder="Họ tên" value="{{ Auth::user()->name }}" required>
+        <input type="text" name="phone" placeholder="SĐT" value="{{ Auth::user()->phone }}" required>
+        <input type="text" name="address" placeholder="Địa chỉ" value="{{ Auth::user()->address }}" required>
 
         <button type="submit">ĐẶT HÀNG</button>
     </form>

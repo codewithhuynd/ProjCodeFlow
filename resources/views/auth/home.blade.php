@@ -625,39 +625,48 @@
 
         <div class="auth-buttons" style="display: flex; align-items: center; gap: 15px;">
             @auth
-            @if(Auth::user()->is_admin)
-            <span style="font-size: 14px; color: #ef4444;">Đang dùng quyền Quản trị</span>
-            <a href="/admin/dashboard" style="background-color: #1e3a8a; color: white; padding: 6px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px;">
-                Vào Trang Admin
-            </a>
+                @if(Auth::user()->is_admin)
+                    <span style="font-size: 14px; color: #ef4444;">Đang dùng quyền Quản trị</span>
+                    <a href="/admin/dashboard" style="background-color: #1e3a8a; color: white; padding: 6px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                        Vào Trang Admin
+                    </a>
 
-            <div style="display: flex; flex-direction: column; align-items: center;">
-                <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
-                    @csrf
-                    <button type="submit" class="btn-logout" style="width: 100%;">Đăng xuất</button>
-                </form>
-                <a href="{{ route('password.change') }}" style="color: #bfdbfe; font-size: 12px; text-decoration: underline; margin-top: 5px;">
-                    Đổi mật khẩu?
-                </a>
-            </div>
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
+                            @csrf
+                            <button type="submit" class="btn-logout" style="width: 100%;">Đăng xuất</button>
+                        </form>
+                        <a href="{{ route('password.change') }}" style="color: #bfdbfe; font-size: 12px; text-decoration: underline; margin-top: 5px;">
+                            Đổi mật khẩu?
+                        </a>
+                    </div>
+                @else
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img src="{{ asset('images/ảnh đại diện mặc định.jpg') }}" 
+                            style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #93c5fd;">
+                        
+                        <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                            <span style="font-size: 14px; color: #fff;">Chào <strong>{{ Auth::user()->name }}</strong></span>
+                            
+                            <div style="display: flex; gap: 10px; margin-top: 4px;">
+                                <a href="{{ route('profile.edit') }}" style="color: #fff; font-size: 11px; text-decoration: none; background: #2563eb; padding: 2px 8px; border-radius: 4px; border: 1px solid #3b82f6;">
+                                    <i class="fas fa-user-edit"></i> Cập nhật thông tin
+                                </a>
+                                <a href="{{ route('password.change') }}" style="color: #bfdbfe; font-size: 11px; text-decoration: underline;">
+                                    Đổi mật khẩu?
+                                </a>
+                            </div>
+                        </div>
 
+                        <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                            @csrf
+                            <button type="submit" class="btn-logout" style="padding: 5px 10px; font-size: 12px;">Đăng xuất</button>
+                        </form>
+                    </div>
+                    @endif
             @else
-            <span style="font-size: 14px; color: #93c5fd;">Chào <strong>{{ Auth::user()->name }}</strong></span>
-
-            <div style="display: flex; flex-direction: column; align-items: center;">
-                <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
-                    @csrf
-                    <button type="submit" class="btn-logout" style="width: 100%;">Đăng xuất</button>
-                </form>
-                <a href="{{ route('password.change') }}" style="color: #bfdbfe; font-size: 12px; text-decoration: underline; margin-top: 5px;">
-                    Bạn muốn đổi mật khẩu?
-                </a>
-            </div>
-            @endif
-
-            @else
-            <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
-            <a href="/register" class="btn-register">Đăng ký</a>
+                <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
+                <a href="/register" class="btn-register">Đăng ký</a>
             @endauth
         </div>
         </div>

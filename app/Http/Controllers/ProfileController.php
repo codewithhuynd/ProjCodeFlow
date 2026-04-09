@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -48,5 +49,40 @@ class ProfileController extends Controller
 
         // Đẩy về trang login kèm thông báo thành công
         return redirect('/login')->with('success', 'Đổi mật khẩu thành công. Vui lòng đăng nhập lại!');
+    }
+
+    // Hiển thị form cập nhật thông tin
+    public function edit()
+    {
+        $user = Auth::user();
+        return view('auth.profile_edit', compact('user'));
+    }
+
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+
+        // 1. Validate dữ liệu (Đã bỏ validate avatar)
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:15',
+            'address' => 'nullable|string|max:255',
+        ]);
+
+        // 2. Cập nhật các thông tin cơ bản
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->address = $request->address;
+        
+        // Cố định tên file ảnh mặc định trong DB (nếu muốn)
+        $user->avatar = 'ảnh đại diện mặc định.jpg';
+
+        // 3. Lưu vào cơ sở dữ liệu
+        $user->save();
+
+        // 4. Quay lại và hiển thị thông báo thành công
+        return back()->with('success', 'Đã lưu lại thông tin thành công!');
     }
 }
