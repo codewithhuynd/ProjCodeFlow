@@ -66,7 +66,7 @@ Route::post('/update-cart', [ProductController::class, 'updateCart'])->name('upd
 // --- KHU VỰC DÀNH CHO NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP ---
 Route::middleware('auth')->group(function () {
     Route::get('/change-password', [ProfileController::class, 'changePasswordForm'])->name('password.change');
-    Route::post('/change-password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::post('/change-password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 });
 
 
@@ -95,3 +95,4 @@ Route::get('password/reset/{token}', [ResetPasswordController::class, 'showReset
 
 // 4. Xử lý lưu mật khẩu mới vào Database (AC 5)
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+
