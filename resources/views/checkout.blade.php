@@ -3,7 +3,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Thanh toán | GUCO</title>
+    <title>Thanh toán</title>
 
 <style>
     body {
@@ -123,7 +123,7 @@
 <body>
 
 <header>
-    GUCO CHECKOUT
+    <img src="{{ asset('images/logo.png') }}" height="40" alt="Logo">
 </header>
 
 <a href="/home" class="back">← Quay lại</a>

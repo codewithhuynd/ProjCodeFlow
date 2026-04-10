@@ -73,7 +73,8 @@
             border-radius: 4px;
             display: flex;
             align-items: center;
-            padding: 5px 15px;
+            padding: 8px 15px;
+            width: 450px;
         }
 
         .search-bar input {
@@ -82,7 +83,8 @@
             color: #fff;
             padding: 5px;
             outline: none;
-            width: 150px;
+            width: 100%;
+            margin-left: 8px
         }
 
         .search-bar input::placeholder {
@@ -567,16 +569,9 @@
     @endif
     <header>
         <div class="logo-nav">
-            <img src="/images/logo.png" height="40">
-            <nav>
-                <ul>
-                    <li><a href="#">New Arrivals</a></li>
-                    <li><a href="#">Nữ</a></li>
-                    <li><a href="#">Nam</a></li>
-                    <li><a href="#">Áo</a></li>
-                    <li><a href="#">Quần</a></li>
-                </ul>
-            </nav>
+            <a href="/home">
+            <img src="/images/logo.png" height="40" alt="Trang chủ" style="cursor: pointer;">
+            </a>
         </div>
 
         <form action="{{ route('products.search') }}" method="GET" class="search-bar">
@@ -689,7 +684,6 @@
         <div class="flash-sale-title">
             <i class="fas fa-bolt"></i> NEW ✨✨✨
         </div>
-        <a href="#" class="flash-sale-link">Xem tất cả &rarr;</a>
     </div>
 
     <section class="products">

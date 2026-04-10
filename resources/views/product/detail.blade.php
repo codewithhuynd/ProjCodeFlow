@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{{ $product->name }} | GUCO</title>
+    <title>{{ $product->name }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -414,7 +414,7 @@
     <header>
         <div class="logo-nav">
             <a href="/home">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo GUCO">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo">
             </a>
             <nav>
                 <ul>
