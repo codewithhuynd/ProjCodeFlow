@@ -100,4 +100,14 @@ class OrderController extends Controller
             'success' => true
         ]);
     }
+
+    public function myOrders()
+{
+    $orders = Order::with('items.product')
+        ->where('user_id', auth()->id())
+        ->orderByDesc('id')
+        ->get();
+
+    return view('auth.orders', compact('orders'));
+}
 }

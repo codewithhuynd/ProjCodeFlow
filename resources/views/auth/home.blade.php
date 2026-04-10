@@ -569,9 +569,20 @@
     @endif
     <header>
         <div class="logo-nav">
-            <a href="/home">
-            <img src="/images/logo.png" height="40" alt="Trang chủ" style="cursor: pointer;">
-            </a>
+            <img src="/images/logo.png" height="40">
+            <nav>
+                <ul>
+                    <li><a href="#">New Arrivals</a></li>
+                    <li><a href="#">Nữ</a></li>
+                    <li><a href="#">Nam</a></li>
+                    <li><a href="#">Áo</a></li>
+                    <li><a href="#">Quần</a></li>
+                    <li> <a href="{{ route('my.orders') }}">
+                            Đơn hàng của tôi
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
         <form action="{{ route('products.search') }}" method="GET" class="search-bar">
@@ -626,32 +637,22 @@
                         Vào Trang Admin
                     </a>
 
-                    <div style="display: flex; flex-direction: column; align-items: center;">
-                        <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
-                            @csrf
-                            <button type="submit" class="btn-logout" style="width: 100%;">Đăng xuất</button>
-                        </form>
-                        <a href="{{ route('password.change') }}" style="color: #bfdbfe; font-size: 12px; text-decoration: underline; margin-top: 5px;">
-                            Đổi mật khẩu?
-                        </a>
-                    </div>
-                @else
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <img src="{{ asset('images/ảnh đại diện mặc định.jpg') }}" 
-                            style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #93c5fd;">
-                        
-                        <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                            <span style="font-size: 14px; color: #fff;">Chào <strong>{{ Auth::user()->name }}</strong></span>
-                            
-                            <div style="display: flex; gap: 10px; margin-top: 4px;">
-                                <a href="{{ route('profile.edit') }}" style="color: #fff; font-size: 11px; text-decoration: none; background: #2563eb; padding: 2px 8px; border-radius: 4px; border: 1px solid #3b82f6;">
-                                    <i class="fas fa-user-edit"></i> Cập nhật thông tin
-                                </a>
-                                <a href="{{ route('password.change') }}" style="color: #bfdbfe; font-size: 11px; text-decoration: underline;">
-                                    Đổi mật khẩu?
-                                </a>
-                            </div>
-                        </div>
+            @else
+            <span style="font-size: 14px; color: #93c5fd;">Chào <strong>{{ Auth::user()->name }}</strong></span>
+            <a href="{{ route('my.orders') }}" style="color:#fff; text-decoration:none; font-weight:bold; font-size:14px; padding:6px 12px; border-radius:4px; border: 1px solid rgba(255,255,255,0.35);">
+                Đơn hàng của tôi
+            </a>
+
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
+                    @csrf
+                    <button type="submit" class="btn-logout" style="width: 100%;">Đăng xuất</button>
+                </form>
+                <a href="{{ route('password.change') }}" style="color: #bfdbfe; font-size: 12px; text-decoration: underline; margin-top: 5px;">
+                    Bạn muốn đổi mật khẩu?
+                </a>
+            </div>
+            @endif
 
                         <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                             @csrf
@@ -707,9 +708,12 @@
                         </span>
                     </div>
 
-                    <button class="btn-add" onclick="addToCart(event, {{ $product->id }});">Thêm vào giỏ</button>
+                    <button class="btn-add" onclick="addToCart(event, {{ $product->id }})">
+                        Thêm vào giỏ
+                    </button>
                 </div>
             </a>
+
         </div>
 
         @empty
