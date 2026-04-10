@@ -341,6 +341,100 @@
             font-size: 14px;
             margin-top: 50px;
         }
+        /* ================= CSS PHẦN ĐÁNH GIÁ ================= */
+        .reviews-section {
+            margin-top: 50px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 30px;
+        }
+
+        .reviews-section h3 {
+            font-size: 24px;
+            color: #1e3a8a;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .review-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .review-author {
+            font-weight: bold;
+            color: #1e293b;
+            font-size: 15px;
+        }
+
+        .review-stars {
+            color: #eab308;
+            font-size: 14px;
+        }
+
+        .review-comment {
+            color: #475569;
+            font-style: italic;
+            line-height: 1.6;
+            background: #fff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 10px;
+            display: block;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 10px;
+            margin-top: 30px;
+            padding: 0;
+        }
+
+        .pagination li {
+            display: inline-block;
+        }
+
+        .pagination li a, .pagination li span {
+            padding: 8px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            color: #1e3a8a;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .pagination li a:hover {
+            background-color: #f1f5f9;
+        }
+
+        .pagination li.active span {
+            background-color: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+        }
+
+/* Ẩn bớt các chữ tiếng Anh thừa nếu có */
+.pagination svg {
+    width: 20px; /* Khống chế cái mũi tên khổng lồ ban nãy */
+    height: 20px;
+}
     </style>
 </head>
 
@@ -458,9 +552,61 @@
                 <img src="{{ str_starts_with($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="width: 100%; border-radius: 8px;">
             </div>
 
+            <div class="reviews-section">
+                <h3>Khách hàng nói gì về sản phẩm này?</h3>
+
+                @if(isset($reviews) && $reviews->count() > 0)
+                    @foreach($reviews as $review)
+                        <div class="review-card">
+                            <div class="review-header">
+                                <span class="review-author"><i class="fas fa-user-circle"></i> {{ $review->user->name }}</span>
+                                <div class="review-stars">
+                                    {{ str_repeat('⭐', $review->rating) }}
+                                </div>
+                            </div>
+                            <p class="review-comment">"{{ $review->comment }}"</p>
+                            <span class="review-date">Đã đánh giá vào: {{ $review->created_at->format('d/m/Y H:i') }}</span>
+                        </div>
+                    @endforeach
+
+                    <div class="pagination-links" style="margin-top: 20px; display: flex; justify-content: center;">
+                        {{ $reviews->links() }}
+                    </div>
+                @else
+                    <p style="color: #64748b; font-style: italic; background: #fff; padding: 20px; text-align: center; border-radius: 8px; border: 1px dashed #cbd5e1;">
+                        Sản phẩm này chưa có đánh giá nào.
+                    </p>
+                @endif
+            </div>
+
             <div class="product-info">
                 <div class="category">{{ $product->category->name ?? 'Thời trang' }}</div>
                 <h1>{{ $product->name }}</h1>
+                @if($product->reviews && $product->reviews->count() > 0)
+                    <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        @php 
+                            // Lấy số sao trung bình chính xác (số thập phân, không làm tròn gộp)
+                            $avgRating = $product->reviews->avg('rating'); 
+                        @endphp
+                        
+                        <div style="color: #eab308; font-size: 14px;">
+                            @for($i = 1; $i <= 5; $i++)
+                                @if($i <= floor($avgRating))
+                                    <i class="fas fa-star"></i> @elseif($i == ceil($avgRating) && $avgRating - floor($avgRating) >= 0.5)
+                                    <i class="fas fa-star-half-alt"></i> @else
+                                    <i class="far fa-star" style="color: #cbd5e1;"></i> @endif
+                            @endfor
+                        </div>
+
+                        <span style="color: #1e3a8a; font-size: 13px; font-weight: bold;">
+                            {{ number_format($avgRating, 1) }}/5
+                        </span>
+
+                        <span style="color: #64748b; font-size: 13px;">
+                            ({{ $product->reviews->count() }} đánh giá)
+                        </span>
+                    </div>
+                @endif
                 <div class="price">{{ number_format($product->price, 0, ',', '.') }}đ</div>
 
                 <div class="description">

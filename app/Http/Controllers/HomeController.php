@@ -9,10 +9,11 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        // Tạo query builder
-        $products = Product::query();
+        // Tích hợp tính năng tính trung bình sao (reviews_avg_rating) 
+        // và tổng số lượt đánh giá (reviews_count) ngay từ lúc khởi tạo query
+        $products = Product::withAvg('reviews', 'rating')->withCount('reviews');
 
-        // Kiểm tra tham số sort từ URL
+        // Kiểm tra tham số sort từ URL (Giữ nguyên logic cực chuẩn của bạn)
         if ($request->sort == 'price_asc') {
             // Giá thấp -> cao
             $products->orderBy('price', 'asc');

@@ -15,7 +15,12 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::findOrFail($id);
-        return view('product.detail', compact('product'));
+
+        // Lấy danh sách đánh giá của sản phẩm này, phân trang mỗi trang 5 cái
+        // latest() để đưa đánh giá mới nhất lên đầu
+        $reviews = $product->reviews()->with('user')->latest()->paginate(1);
+        
+        return view('product.detail', compact('product', 'reviews'));
     }
 
     // 2. Tìm kiếm và lọc sản phẩm ở trang chủ
@@ -28,7 +33,10 @@ class ProductController extends Controller
             return redirect()->route('home');
         }
 
-        $productsQuery = Product::where(function ($q) use ($query) {
+        // Đã nâng cấp: Tính trung bình sao và đếm số lượng đánh giá ngay lúc tìm kiếm
+        $productsQuery = Product::withAvg('reviews', 'rating')
+                                ->withCount('reviews')
+                                ->where(function ($q) use ($query) {
             $q->where('name', 'LIKE', $query . ' %')          
               ->orWhere('name', 'LIKE', '% ' . $query . ' %') 
               ->orWhere('name', 'LIKE', '% ' . $query)
@@ -42,6 +50,7 @@ class ProductController extends Controller
         }
 
         $products = $productsQuery->get();
+        
         return view('auth.home', compact('products'));
     }
 
