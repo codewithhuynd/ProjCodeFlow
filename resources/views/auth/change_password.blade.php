@@ -12,7 +12,7 @@
     <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-blue-100">
         <h2 class="text-3xl font-bold text-blue-900 mb-6 text-center">Đổi Mật Khẩu 🔒</h2>
 
-        <form action="{{ route('password.update') }}" method="POST" class="space-y-5">
+        <form action="{{ route('profile.password.update') }}" method="POST" class="space-y-5">
             @csrf
             
             @if ($errors->any())
