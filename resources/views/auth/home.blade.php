@@ -73,7 +73,8 @@
             border-radius: 4px;
             display: flex;
             align-items: center;
-            padding: 5px 15px;
+            padding: 8px 15px;
+            width: 450px;
         }
 
         .search-bar input {
@@ -82,7 +83,8 @@
             color: #fff;
             padding: 5px;
             outline: none;
-            width: 150px;
+            width: 100%;
+            margin-left: 8px
         }
 
         .search-bar input::placeholder {
@@ -629,21 +631,11 @@
 
         <div class="auth-buttons" style="display: flex; align-items: center; gap: 15px;">
             @auth
-            @if(Auth::user()->is_admin)
-            <span style="font-size: 14px; color: #ef4444;">Đang dùng quyền Quản trị</span>
-            <a href="/admin/dashboard" style="background-color: #1e3a8a; color: white; padding: 6px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px;">
-                Vào Trang Admin
-            </a>
-
-            <div style="display: flex; flex-direction: column; align-items: center;">
-                <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
-                    @csrf
-                    <button type="submit" class="btn-logout" style="width: 100%;">Đăng xuất</button>
-                </form>
-                <a href="{{ route('password.change') }}" style="color: #bfdbfe; font-size: 12px; text-decoration: underline; margin-top: 5px;">
-                    Đổi mật khẩu?
-                </a>
-            </div>
+                @if(Auth::user()->is_admin)
+                    <span style="font-size: 14px; color: #ef4444;">Đang dùng quyền Quản trị</span>
+                    <a href="/admin/dashboard" style="background-color: #1e3a8a; color: white; padding: 6px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                        Vào Trang Admin
+                    </a>
 
             @else
             <span style="font-size: 14px; color: #93c5fd;">Chào <strong>{{ Auth::user()->name }}</strong></span>
@@ -662,9 +654,15 @@
             </div>
             @endif
 
+                        <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                            @csrf
+                            <button type="submit" class="btn-logout" style="padding: 5px 10px; font-size: 12px;">Đăng xuất</button>
+                        </form>
+                    </div>
+                    @endif
             @else
-            <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
-            <a href="/register" class="btn-register">Đăng ký</a>
+                <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
+                <a href="/register" class="btn-register">Đăng ký</a>
             @endauth
         </div>
         </div>
@@ -685,9 +683,8 @@
     <div class="flash-sale">
 
         <div class="flash-sale-title">
-            <i class="fas fa-bolt"></i> NEW ✨✨✨
+            <i class="fas fa-bolt"></i> CÁC SẢN PHẨM MỚI ✨✨✨
         </div>
-        <a href="#" class="flash-sale-link">Xem tất cả &rarr;</a>
     </div>
 
     <section class="products">
@@ -697,7 +694,7 @@
             <a href="{{ route('product.show', $product->id) }}" style="text-decoration:none; color:inherit;">
                 <div class="product-image">
                     <div class="badge">MỚI</div>
-                    <img src="{{ asset($product->image) }}" alt="{{ $product->name }}">
+                    <img src="{{ (str_starts_with($product->image, 'http')) ? $product->image : asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
                 </div>
 
                 <div class="product-info">
@@ -805,7 +802,7 @@
                     let html = '';
                     data.forEach(item => {
                         let product = item.product;
-                        let imageSrc = product.image.startsWith('http') ? product.image : `/${product.image}`;
+                        let imageSrc = product.image.startsWith('http') ? product.image : `/storage/${product.image}`;
 
                         html += `
                             <div class="cart-item">

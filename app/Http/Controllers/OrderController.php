@@ -10,40 +10,23 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    // 🔹 Trang checkout
-    public function checkout()
+    // 🔹 Trang checkout (Chỉ nhận dữ liệu từ Giỏ hàng)
+    public function checkout(Request $request)
     {
-        // 👉 Nếu mua ngay
-        if (session()->has('buy_now')) {
-            $item = session('buy_now');
-
-            $cartItems = collect([
-                (object)[
-                    'product' => (object)[
-                        'name' => $item['name'],
-                        'price' => $item['price']
-                    ],
-                    'quantity' => $item['quantity']
-                ]
-            ]);
-
-            return view('checkout', compact('cartItems'));
-        }
-
-        // 👉 Nếu từ cart
         $selectedIds = session('selected_cart_ids');
 
         if ($selectedIds) {
             $cartItems = Cart::with('product')
-                ->where('user_id', auth()->id())
+                ->where('user_id', $request->user()->id)
                 ->whereIn('id', $selectedIds)
                 ->get();
         } else {
-            return back()->with('error', 'Bạn chưa chọn sản phẩm!');
+            return back()->with('error', 'Bạn chưa chọn sản phẩm nào từ giỏ hàng!');
         }
 
         return view('checkout', compact('cartItems'));
     }
+
     // 🔥 XỬ LÝ ĐẶT HÀNG
     public function placeOrder(Request $request)
     {
@@ -53,40 +36,11 @@ class OrderController extends Controller
             'address' => 'required',
         ]);
 
-        // 🔥 TRƯỜNG HỢP MUA NGAY
-        if (session()->has('buy_now')) {
-
-            $item = session('buy_now');
-
-            $total = $item['price'] * $item['quantity'];
-
-            $order = Order::create([
-                'user_id' => auth()->id(),
-                'name' => $request->name,
-                'phone' => $request->phone,
-                'address' => $request->address,
-                'total_price' => $total,
-                'status' => 'pending'
-            ]);
-
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $item['product_id'],
-                'quantity' => $item['quantity'],
-                'price' => $item['price']
-            ]);
-
-            session()->forget('buy_now');
-
-            return redirect('/home')->with('success', 'Đặt hàng thành công!');
-        }
-
-        // 🔥 TRƯỜNG HỢP CART
         $selectedIds = session('selected_cart_ids');
 
         if ($selectedIds) {
             $cartItems = Cart::with('product')
-                ->where('user_id', auth()->id())
+                ->where('user_id', $request->user()->id)
                 ->whereIn('id', $selectedIds)
                 ->get();
         } else {
@@ -97,13 +51,15 @@ class OrderController extends Controller
             return back()->with('error', 'Giỏ hàng trống!');
         }
 
+        // Tính tổng tiền
         $total = 0;
         foreach ($cartItems as $item) {
             $total += $item->product->price * $item->quantity;
         }
 
+        // Tạo đơn hàng mới
         $order = Order::create([
-            'user_id' => auth()->id(),
+            'user_id' => $request->user()->id,
             'name' => $request->name,
             'phone' => $request->phone,
             'address' => $request->address,
@@ -111,6 +67,7 @@ class OrderController extends Controller
             'status' => 'pending'
         ]);
 
+        // Lưu chi tiết đơn hàng & Trừ tồn kho tự động
         foreach ($cartItems as $item) {
             OrderItem::create([
                 'order_id' => $order->id,
@@ -118,37 +75,23 @@ class OrderController extends Controller
                 'quantity' => $item->quantity,
                 'price' => $item->product->price
             ]);
+
+            // Trừ kho ngay lập tức
+            \App\Models\Product::where('id', $item->product_id)->decrement('stock', $item->quantity);
         }
 
+        // Xóa sản phẩm đã mua khỏi giỏ hàng
         Cart::whereIn('id', $selectedIds)->delete();
+
+        // Xóa session
+        session()->forget('selected_cart_ids');
 
         return redirect('/home')->with('success', 'Đặt hàng thành công!');
     }
 
-
-
-    public function buyNow(Request $request)
-    {
-        $product = \App\Models\Product::findOrFail($request->product_id);
-
-        session([
-            'buy_now' => [
-                'product_id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'quantity' => $request->quantity
-            ]
-        ]);
-
-        return response()->json([
-            'success' => true
-        ]);
-    }
-
+    // 🔹 Xử lý lưu các sản phẩm được tick chọn trong giỏ hàng để chuyển sang trang Checkout
     public function checkoutSelected(Request $request)
     {
-        session()->forget('buy_now'); // ❗ QUAN TRỌNG
-
         session([
             'selected_cart_ids' => $request->selected
         ]);

@@ -101,6 +101,50 @@
         }
 
         /* =========================================
+           BỘ LỌC TRẠNG THÁI
+           ========================================= */
+        .filter-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .filter-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 35px;
+            background-color: #ffffff;
+            min-width: 220px;
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .filter-content.show {
+            display: block;
+        }
+
+        .filter-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .filter-content a:last-child {
+            border-bottom: none;
+        }
+
+        .filter-content a:hover {
+            background-color: #f8fafc;
+            color: #1e3a8a;
+            font-weight: bold;
+        }
+
+        /* =========================================
            3. KHU VỰC QUẢN LÝ (ADMIN SECTION)
            ========================================= */
         .admin-section {
@@ -374,6 +418,17 @@
 
         <div class="admin-header">
             <h2 class="admin-title">Danh sách sản phẩm</h2>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <div class="filter-dropdown">
+                    <i class="fas fa-filter" title="Lọc trạng thái kho" onclick="toggleFilter()" style="cursor: pointer; font-size: 22px; color: #1e3a8a;"></i>
+                    <div id="myStockFilter" class="filter-content">
+                        <a href="{{ route('admin.products') }}" style="text-align: center; font-weight: bold; color: #1e3a8a; background-color: #f8fafc;">Hiển thị tất cả</a>
+                        <a href="{{ request()->fullUrlWithQuery(['stock_status' => 'in_stock']) }}">🟢 Còn hàng (>= 10)</a>
+                        <a href="{{ request()->fullUrlWithQuery(['stock_status' => 'low_stock']) }}">🟠 Sắp hết hàng (< 10)</a>
+                        <a href="{{ request()->fullUrlWithQuery(['stock_status' => 'out_of_stock']) }}">🔴 Hết hàng (= 0)</a>
+                    </div>
+                </div>
+            </div>
             <button onclick="openAddModal()" class="btn-success">
                 <i class="fas fa-plus"></i> Thêm sản phẩm mới
             </button>
@@ -396,8 +451,9 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td style="text-align: center;">
-                            <img src="{{ $product->image }}" alt="anh" class="product-img-small">
-                        </td>
+                            <img src="{{ (str_starts_with($product->image, 'http')) ? $product->image : asset('storage/' . $product->image) }}" 
+                                alt="{{ $product->name }}" 
+                                class="product-img-small">                        </td>
                         <td style="font-weight: bold; color: #1e3a8a;">{{ $product->name }}</td>
                         <td style="color: #ef4444; font-weight: bold;">{{ number_format($product->price, 0, ',', '.') }}đ</td>
                         <td>{{ $product->stock }}</td>
@@ -452,7 +508,7 @@
             <i class="fas fa-times modal-close" onclick="closeEditModal()"></i>
             <h2 style="color: #1e3a8a; margin-bottom: 20px; font-size: 24px;">Sửa Sản Phẩm</h2>
             
-            <form id="editForm" method="POST" action="">
+            <form id="editForm" method="POST" action="" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="form-group">
@@ -470,9 +526,14 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Hình ảnh (URL)</label>
-                    <input type="text" name="image" id="edit_image" class="form-control" oninput="previewEditImage()">
-                    <img id="edit_preview" src="" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px; margin-top: 10px; display: none;">
+                    <label>Hình ảnh sản phẩm</label>
+                    <input type="file" name="image_upload" id="edit_upload" class="form-control" accept=".jpg, .jpeg, .png, .webp" onchange="previewEditImage(event)" style="margin-bottom: 10px;">
+    
+                    <input type="text" name="image" id="edit_image" class="form-control" placeholder="Hoặc dán URL ảnh vào đây..." oninput="previewEditImage(event)">
+    
+                <div style="text-align: center; margin-top: 10px;">
+                    <img id="edit_preview" src="" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; display: none; margin: 0 auto;">
+                </div>
                 </div>
                 <div class="form-group">
                     <label>Mô tả sản phẩm</label>
@@ -488,7 +549,7 @@
             <i class="fas fa-times modal-close" onclick="closeAddModal()"></i>
             <h2 style="color: #1e3a8a; margin-bottom: 20px; font-size: 24px;">Thêm Sản Phẩm Mới</h2>
             
-            <form method="POST" action="{{ route('admin.products.store') }}">
+            <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <label>Tên sản phẩm</label>
@@ -505,9 +566,14 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Hình ảnh (URL)</label>
-                    <input type="text" name="image" id="add_image" class="form-control" oninput="previewAddImage()">
-                    <img id="add_preview" src="" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px; margin-top: 10px; display: none;">
+                    <label>Hình ảnh sản phẩm</label>
+                    <input type="file" name="image_upload" id="add_upload" class="form-control" accept=".jpg, .jpeg, .png, .webp" onchange="previewAddImage(event)" style="margin-bottom: 10px;">
+    
+                    <input type="text" name="image" id="add_image" class="form-control" placeholder="Hoặc dán URL ảnh vào đây..." oninput="previewAddImage(event)">
+    
+                <div style="text-align: center; margin-top: 10px;">
+                    <img id="add_preview" src="" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; display: none; margin: 0 auto;">
+                </div>
                 </div>
                 <div class="form-group">
                     <label>Mô tả sản phẩm</label>
@@ -519,62 +585,109 @@
     </div>
 
     <script>
-        // --- XỬ LÝ POP-UP SỬA ---
-        function openEditModal(button) {
-            let id = button.getAttribute('data-id');
-            document.getElementById('edit_name').value = button.getAttribute('data-name');
-            document.getElementById('edit_price').value = button.getAttribute('data-price');
-            document.getElementById('edit_stock').value = button.getAttribute('data-stock');
-            document.getElementById('edit_image').value = button.getAttribute('data-image');
-            document.getElementById('edit_description').value = button.getAttribute('data-description');
+    // --- XỬ LÝ POP-UP SỬA ---
+    function openEditModal(button) {
+        let id = button.getAttribute('data-id');
+        document.getElementById('edit_name').value = button.getAttribute('data-name');
+        document.getElementById('edit_price').value = button.getAttribute('data-price');
+        document.getElementById('edit_stock').value = button.getAttribute('data-stock');
+        document.getElementById('edit_image').value = button.getAttribute('data-image');
+        document.getElementById('edit_description').value = button.getAttribute('data-description');
+        
+        // Reset ô chọn file
+        document.getElementById('edit_upload').value = "";
 
-            previewEditImage();
-
-            let baseUrl = "{{ route('admin.products.update', ':id') }}";
-            document.getElementById('editForm').action = baseUrl.replace(':id', id);
-
-            document.getElementById('editModal').classList.add('active');
+        // Hiển thị ảnh hiện tại của sản phẩm
+        let imgUrl = button.getAttribute('data-image');
+        let preview = document.getElementById('edit_preview');
+        if (imgUrl) {
+            // Kiểm tra nếu là ảnh từ storage hay ảnh URL
+            preview.src = imgUrl.startsWith('http') ? imgUrl : "/storage/" + imgUrl;
+            preview.style.display = 'block';
+        } else {
+            preview.style.display = 'none';
         }
 
-        function closeEditModal() {
-            document.getElementById('editModal').classList.remove('active');
-        }
+        let baseUrl = "{{ route('admin.products.update', ':id') }}";
+        document.getElementById('editForm').action = baseUrl.replace(':id', id);
 
-        function previewEditImage() {
-            let imgUrl = document.getElementById('edit_image').value;
-            let preview = document.getElementById('edit_preview');
-            preview.src = imgUrl;
-            preview.style.display = imgUrl ? 'block' : 'none';
-        }
+        document.getElementById('editModal').classList.add('active');
+    }
 
-        // --- XỬ LÝ POP-UP THÊM ---
-        function openAddModal() {
-            document.getElementById('addModal').classList.add('active');
-        }
+    function closeEditModal() {
+        document.getElementById('editModal').classList.remove('active');
+    }
 
-        function closeAddModal() {
-            document.getElementById('addModal').classList.remove('active');
-        }
+    function previewEditImage(event = null) {
+        const fileInput = document.getElementById('edit_upload');
+        const urlInput = document.getElementById('edit_image');
+        const preview = document.getElementById('edit_preview');
 
-        function previewAddImage() {
-            let imgUrl = document.getElementById('add_image').value;
-            let preview = document.getElementById('add_preview');
-            preview.src = imgUrl;
-            preview.style.display = imgUrl ? 'block' : 'none';
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; }
+            reader.readAsDataURL(fileInput.files[0]);
+        } else if (urlInput.value) {
+            preview.src = urlInput.value;
+            preview.style.display = 'block';
         }
+    }
 
-        // --- TẮT POP-UP KHI BẤM RA NGOÀI ---
-        window.onclick = function(event) {
-            let editModal = document.getElementById('editModal');
-            let addModal = document.getElementById('addModal');
-            if (event.target == editModal) {
-                closeEditModal();
+    // --- XỬ LÝ POP-UP THÊM ---
+    function openAddModal() {
+        document.getElementById('addModal').classList.add('active');
+    }
+
+    function closeAddModal() {
+        document.getElementById('addModal').classList.remove('active');
+    }
+
+    function previewAddImage(event = null) {
+        const fileInput = document.getElementById('add_upload');
+        const urlInput = document.getElementById('add_image');
+        const preview = document.getElementById('add_preview');
+
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; }
+            reader.readAsDataURL(fileInput.files[0]);
+        } else if (urlInput.value) {
+            preview.src = urlInput.value;
+            preview.style.display = 'block';
+        } else {
+            preview.style.display = 'none';
+        }
+    }
+
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            closeEditModal();
+            closeAddModal();
+        }
+    }
+    // --- XỬ LÝ BỘ LỌC ---
+    function toggleFilter() {
+        document.getElementById("myStockFilter").classList.toggle("show");
+    }
+
+    window.onclick = function(event) {
+        // Đóng Modal
+        if (event.target.classList.contains('modal-overlay')) {
+            closeEditModal();
+            closeAddModal();
+        }
+        
+        // Đóng Bộ lọc nếu bấm ra ngoài
+        if (!event.target.matches('.fa-filter')) {
+            var dropdowns = document.getElementsByClassName("filter-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                if (dropdowns[i].classList.contains('show')) {
+                    dropdowns[i].classList.remove('show');
+                }
             }
-            if (event.target == addModal) {
-                closeAddModal();
-            }
         }
-    </script>
+    }
+</script>
 </body>
 
 </html>
