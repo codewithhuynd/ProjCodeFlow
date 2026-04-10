@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminOrderController;
+use App\Http\Controllers\ReviewController;
 
 //trang đăng ký
 Route::get('/register',[RegisterController::class,'showRegister']);
@@ -97,6 +98,9 @@ Route::middleware('auth')->group(function () {
 
     // Trang đơn hàng của tôi (User)
     Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('orders.my');
+    // Chức năng Đánh giá sản phẩm
+    Route::get('/review/order/{id}', [ReviewController::class, 'create']);
+    Route::post('/review/store', [ReviewController::class, 'store'])->name('review.store');
 
 });
 

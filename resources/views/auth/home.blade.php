@@ -693,7 +693,6 @@
 
     <section class="products">
         @forelse($products as $product)
-
         <div class="product-card">
             <a href="{{ route('product.show', $product->id) }}" style="text-decoration:none; color:inherit;">
                 <div class="product-image">
@@ -710,6 +709,26 @@
                         <span class="new-price">
                             {{ number_format($product->price, 0, ',', '.') }}đ
                         </span>
+                        
+                        <div style="margin-top: 5px; display: flex; align-items: center; gap: 5px;">
+                            @php
+                                $avgRating = round($product->reviews_avg_rating ?? 0);
+                            @endphp
+
+                            <div style="color: #eab308; font-size: 12px;">
+                                @for($i = 1; $i <= 5; $i++)
+                                    @if($i <= $avgRating)
+                                        <i class="fas fa-star"></i> 
+                                    @else
+                                        <i class="far fa-star" style="color: #cbd5e1;"></i> 
+                                    @endif
+                                @endfor
+                            </div>
+
+                            <span style="font-size: 11px; color: #64748b;">
+                                ({{ $product->reviews_count ?? 0 }})
+                            </span>
+                        </div>
                     </div>
 
                     <button class="btn-add" onclick="addToCart(event, {{ $product->id }})">
@@ -717,7 +736,6 @@
                     </button>
                 </div>
             </a>
-
         </div>
 
         @empty

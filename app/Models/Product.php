@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    // THÊM ĐOẠN NÀY VÀO ĐỂ CẤP QUYỀN CẬP NHẬT:
+    // ĐỂ CẤP QUYỀN CẬP NHẬT:
     protected $fillable = [
         'name',
         'price',
@@ -19,4 +19,10 @@ class Product extends Model
         'category_id', 
         'slug',
     ];
+
+    //  Mối quan hệ: 1 Sản phẩm có nhiều Đánh giá
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

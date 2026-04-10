@@ -88,6 +88,27 @@
             background: #fee2e2;
             color: #991b1b;
         }
+        .canceled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .btn-review {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 5px 12px;
+            background-color: #f59e0b;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+            transition: background 0.3s;
+        }
+
+        .btn-review:hover {
+            background-color: #d97706;
+        }
 
         .empty {
             text-align: center;
@@ -144,6 +165,12 @@
                 <span class="status {{ $st['class'] }}">
                     {{ $st['label'] }}
                 </span>
+
+                @if($order->status === 'completed')
+                    <a href="{{ url('/review/order/' . $order->id) }}" class="btn-review">
+                        ⭐ Đánh giá
+                    </a>
+                @endif
             </td>
 
             <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
