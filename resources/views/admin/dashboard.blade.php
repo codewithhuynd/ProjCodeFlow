@@ -102,7 +102,7 @@
     <a href="{{ route('admin.products') }}" class="menu-item text-white">
         <i class="bi bi-box-seam"></i> Quản lý sản phẩm
     </a>
-    <a href="#" class="menu-item text-white">
+    <a href="{{ route('admin.orders') }}" class="menu-item text-white">
         <i class="bi bi-receipt"></i> Quản lý đơn hàng
     </a>
 

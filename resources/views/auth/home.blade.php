@@ -643,6 +643,9 @@
 
             @else
             <span style="font-size: 14px; color: #93c5fd;">Chào <strong>{{ Auth::user()->name }}</strong></span>
+            <a href="{{ route('orders.my') }}" style="color:#fff; text-decoration:none; font-weight:bold; font-size:14px; padding:6px 12px; border-radius:4px; border: 1px solid rgba(255,255,255,0.35);">
+                Đơn hàng của tôi
+            </a>
 
             <div style="display: flex; flex-direction: column; align-items: center;">
                 <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">

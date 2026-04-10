@@ -157,4 +157,13 @@ class OrderController extends Controller
             'success' => true
         ]);
     }
+
+    public function myOrders()
+    {
+        $orders = Order::where('user_id', auth()->id())
+            ->orderByDesc('id')
+            ->get();
+
+        return view('auth.orders', compact('orders'));
+    }
 }

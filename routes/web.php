@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\AdminOrderController;
 
 //trang đăng ký
 Route::get('/register',[RegisterController::class,'showRegister']);
@@ -39,6 +40,10 @@ Route::prefix('admin') -> middleware(['auth','admin']) ->group(function(){
     Route::get('/dashboard',[AdminController::class,'dashboard']);
     //Khi vào /admin/logout → gọi hàm logout() để đăng xuất.
     Route::get('/logout',[AdminController::class,'logout']);
+
+    // Quản trị đơn hàng
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders');
+    Route::post('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
 });
 //Trang quản lý sản phẩm
 Route::prefix('admin')->group(function () {
@@ -78,5 +83,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/buy-now', [OrderController::class, 'buyNow']);
 
     Route::post('/checkout-selected', [OrderController::class, 'checkoutSelected']);
+
+    // Trang đơn hàng của tôi (User)
+    Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('orders.my');
 
 });
