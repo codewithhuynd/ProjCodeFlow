@@ -682,7 +682,7 @@
     <div class="flash-sale">
 
         <div class="flash-sale-title">
-            <i class="fas fa-bolt"></i> NEW ✨✨✨
+            <i class="fas fa-bolt"></i> CÁC SẢN PHẨM MỚI ✨✨✨
         </div>
     </div>
 

@@ -55,10 +55,22 @@ class AdminController extends Controller
         return redirect('/admin/login');
     }
 
-    public function manageProducts()
+    public function manageProducts(Request $request)
     {
+        $query = Product::query();
+
+        // Xử lý bộ lọc trạng thái tồn kho
+        if ($request->has('stock_status')) {
+            if ($request->stock_status == 'in_stock') {
+                $query->where('stock', '>=', 10);
+            } elseif ($request->stock_status == 'low_stock') {
+                $query->where('stock', '>', 0)->where('stock', '<', 10);
+            } elseif ($request->stock_status == 'out_of_stock') {
+                $query->where('stock', '=', 0);
+            }
+        }
         // Lấy toàn bộ sản phẩm từ Database, sắp xếp mới nhất lên đầu
-        $products = Product::orderBy('id', 'desc')->get(); 
+        $products = $query->orderBy('id', 'desc')->get(); 
         
         return view('admin.products', compact('products'));
     }
