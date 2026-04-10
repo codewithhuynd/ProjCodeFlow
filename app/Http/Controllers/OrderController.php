@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class OrderController extends Controller
 {
     // 🔹 Trang checkout
-    public function checkout()
+    public function checkout(Request $request)
     {
         // 👉 Nếu mua ngay
         if (session()->has('buy_now')) {
@@ -35,7 +35,7 @@ class OrderController extends Controller
 
         if ($selectedIds) {
             $cartItems = Cart::with('product')
-                ->where('user_id', auth()->id())
+                ->where('user_id', $request->user()->id)
                 ->whereIn('id', $selectedIds)
                 ->get();
         } else {
@@ -61,7 +61,7 @@ class OrderController extends Controller
             $total = $item['price'] * $item['quantity'];
 
             $order = Order::create([
-                'user_id' => auth()->id(),
+                'user_id' => $request->user()->id,
                 'name' => $request->name,
                 'phone' => $request->phone,
                 'address' => $request->address,
@@ -86,7 +86,7 @@ class OrderController extends Controller
 
         if ($selectedIds) {
             $cartItems = Cart::with('product')
-                ->where('user_id', auth()->id())
+                ->where('user_id', $request->user()->id)
                 ->whereIn('id', $selectedIds)
                 ->get();
         } else {
@@ -103,7 +103,7 @@ class OrderController extends Controller
         }
 
         $order = Order::create([
-            'user_id' => auth()->id(),
+            'user_id' => $request->user()->id,
             'name' => $request->name,
             'phone' => $request->phone,
             'address' => $request->address,
