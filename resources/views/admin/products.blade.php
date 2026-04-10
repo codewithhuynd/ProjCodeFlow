@@ -101,6 +101,50 @@
         }
 
         /* =========================================
+           BỘ LỌC TRẠNG THÁI
+           ========================================= */
+        .filter-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .filter-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 35px;
+            background-color: #ffffff;
+            min-width: 220px;
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .filter-content.show {
+            display: block;
+        }
+
+        .filter-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .filter-content a:last-child {
+            border-bottom: none;
+        }
+
+        .filter-content a:hover {
+            background-color: #f8fafc;
+            color: #1e3a8a;
+            font-weight: bold;
+        }
+
+        /* =========================================
            3. KHU VỰC QUẢN LÝ (ADMIN SECTION)
            ========================================= */
         .admin-section {
@@ -374,6 +418,17 @@
 
         <div class="admin-header">
             <h2 class="admin-title">Danh sách sản phẩm</h2>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <div class="filter-dropdown">
+                    <i class="fas fa-filter" title="Lọc trạng thái kho" onclick="toggleFilter()" style="cursor: pointer; font-size: 22px; color: #1e3a8a;"></i>
+                    <div id="myStockFilter" class="filter-content">
+                        <a href="{{ route('admin.products') }}" style="text-align: center; font-weight: bold; color: #1e3a8a; background-color: #f8fafc;">Hiển thị tất cả</a>
+                        <a href="{{ request()->fullUrlWithQuery(['stock_status' => 'in_stock']) }}">🟢 Còn hàng (>= 10)</a>
+                        <a href="{{ request()->fullUrlWithQuery(['stock_status' => 'low_stock']) }}">🟠 Sắp hết hàng (< 10)</a>
+                        <a href="{{ request()->fullUrlWithQuery(['stock_status' => 'out_of_stock']) }}">🔴 Hết hàng (= 0)</a>
+                    </div>
+                </div>
+            </div>
             <button onclick="openAddModal()" class="btn-success">
                 <i class="fas fa-plus"></i> Thêm sản phẩm mới
             </button>
@@ -608,6 +663,28 @@
         if (event.target.classList.contains('modal-overlay')) {
             closeEditModal();
             closeAddModal();
+        }
+    }
+    // --- XỬ LÝ BỘ LỌC ---
+    function toggleFilter() {
+        document.getElementById("myStockFilter").classList.toggle("show");
+    }
+
+    window.onclick = function(event) {
+        // Đóng Modal
+        if (event.target.classList.contains('modal-overlay')) {
+            closeEditModal();
+            closeAddModal();
+        }
+        
+        // Đóng Bộ lọc nếu bấm ra ngoài
+        if (!event.target.matches('.fa-filter')) {
+            var dropdowns = document.getElementsByClassName("filter-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                if (dropdowns[i].classList.contains('show')) {
+                    dropdowns[i].classList.remove('show');
+                }
+            }
         }
     }
 </script>
