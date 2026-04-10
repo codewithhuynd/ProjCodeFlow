@@ -36,23 +36,25 @@ class Order extends Model
     ];
 
     // 🔗 1 Order thuộc về 1 User
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
     // 🔗 1 Order có nhiều sản phẩm
-    public function items() {
+    public function items()
+    {
         return $this->hasMany(OrderItem::class);
     }
 
-    public static function statusLabel(string $status): string
+    public static function statusLabel($status)
     {
         return match ($status) {
-            self::STATUS_PENDING => 'Chờ xác nhận',
-            self::STATUS_PROCESSING => 'Đang xử lý',
-            self::STATUS_SHIPPING => 'Đang giao',
-            self::STATUS_COMPLETED => 'Hoàn thành',
-            self::STATUS_CANCELED => 'Đã hủy',
+            'cho_xac_nhan', 'pending' => 'Chờ xác nhận',
+            'dang_xu_ly', 'processing' => 'Đang xử lý',
+            'dang_giao', 'shipping' => 'Đang giao',
+            'hoan_thanh', 'completed' => 'Hoàn thành',
+            'da_huy', 'canceled' => 'Đã hủy',
             default => $status,
         };
     }

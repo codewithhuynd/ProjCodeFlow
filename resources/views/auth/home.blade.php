@@ -575,6 +575,10 @@
                     <li><a href="#">Nam</a></li>
                     <li><a href="#">Áo</a></li>
                     <li><a href="#">Quần</a></li>
+                    <li> <a href="{{ route('my.orders') }}">
+                            Đơn hàng của tôi
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -643,7 +647,7 @@
 
             @else
             <span style="font-size: 14px; color: #93c5fd;">Chào <strong>{{ Auth::user()->name }}</strong></span>
-            <a href="{{ route('orders.my') }}" style="color:#fff; text-decoration:none; font-weight:bold; font-size:14px; padding:6px 12px; border-radius:4px; border: 1px solid rgba(255,255,255,0.35);">
+            <a href="{{ route('my.orders') }}" style="color:#fff; text-decoration:none; font-weight:bold; font-size:14px; padding:6px 12px; border-radius:4px; border: 1px solid rgba(255,255,255,0.35);">
                 Đơn hàng của tôi
             </a>
 
@@ -707,9 +711,12 @@
                         </span>
                     </div>
 
-                    <button class="btn-add" onclick="addToCart(event, {{ $product->id }});">Thêm vào giỏ</button>
+                    <button class="btn-add" onclick="addToCart(event, {{ $product->id }})">
+                        Thêm vào giỏ
+                    </button>
                 </div>
             </a>
+
         </div>
 
         @empty

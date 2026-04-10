@@ -88,3 +88,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('orders.my');
 
 });
+
+
+
+// USER
+Route::get('/my-orders', [OrderController::class, 'myOrders'])
+    ->middleware('auth')
+    ->name('my.orders');
+
+// ADMIN
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/orders', [AdminOrderController::class, 'index'])
+        ->name('admin.orders');
+
+    Route::put('/orders/{order}', [AdminOrderController::class, 'updateStatus'])
+        ->name('admin.orders.update');
+});

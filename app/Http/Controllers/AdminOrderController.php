@@ -18,25 +18,26 @@ class AdminOrderController extends Controller
 
     public function updateStatus(Request $request, Order $order)
     {
+        // ❌ Không cho sửa nếu đã hoàn thành / hủy
         if ($order->isFinal()) {
-            return back()->with('error', 'Không thể cập nhật trạng thái cho đơn đã hoàn thành/đã hủy.');
+            return back()->with('error', 'Không thể cập nhật đơn này!');
         }
 
-        $validated = $request->validate([
-            'status' => ['required', 'string'],
+        $request->validate([
+            'status' => 'required|string'
         ]);
 
-        $newStatus = $validated['status'];
-        $allowed = Order::allowedNextStatuses($order->status);
+        $newStatus = $request->status;
 
-        if (!in_array($newStatus, $allowed, true)) {
-            return back()->with('error', 'Trạng thái không hợp lệ theo luồng chuẩn.');
+        // 🔥 Check đúng flow
+        if (!in_array($newStatus, Order::allowedNextStatuses($order->status))) {
+            return back()->with('error', 'Sai luồng trạng thái!');
         }
 
-        $order->status = $newStatus;
-        $order->save();
+        $order->update([
+            'status' => $newStatus
+        ]);
 
-        return back()->with('success', 'Cập nhật trạng thái đơn hàng thành công!');
+        return back()->with('success', 'Cập nhật thành công!');
     }
 }
-

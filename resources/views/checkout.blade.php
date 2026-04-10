@@ -3,7 +3,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Thanh toán | GUCO</title>
+    <title>Thanh toán </title>
 
 ```
 <style>
@@ -125,7 +125,7 @@
 <body>
 
 <header>
-    GUCO CHECKOUT
+    CHECKOUT
 </header>
 
 <a href="/home" class="back">← Quay lại</a>
