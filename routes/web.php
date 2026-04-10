@@ -119,3 +119,5 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::put('/orders/{order}', [AdminOrderController::class, 'updateStatus'])
         ->name('admin.orders.update');
 });
+
+Route::post('/remove-from-cart', [ProductController::class, 'removeFromCart'])->name('remove.cart');

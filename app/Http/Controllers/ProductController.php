@@ -95,4 +95,27 @@ class ProductController extends Controller
         }
         return response()->json(['success' => true, 'cartCount' => Cart::where('user_id', Auth::id())->sum('quantity')]);
     }
+    //Xóa sản phẩm khỏi giỏ hàng (Xóa đơn lẻ hoặc xóa hàng loạt)
+    public function removeFromCart(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Bạn cần đăng nhập!']);
+        }
+
+        $cartIds = $request->input('cart_ids'); // Nhận một mảng ID hoặc 1 ID duy nhất
+
+        if (!empty($cartIds)) {
+            Cart::where('user_id', Auth::id())
+                ->whereIn('id', (array)$cartIds)
+                ->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã xóa sản phẩm thành công!',
+                'cartCount' => Cart::where('user_id', Auth::id())->sum('quantity')
+            ]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Không tìm thấy sản phẩm để xóa.']);
+    }
 }
