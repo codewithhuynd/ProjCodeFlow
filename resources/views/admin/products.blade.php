@@ -7,9 +7,6 @@
     <title>Quản lý Sản Phẩm - Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* =========================================
-           1. CSS CƠ BẢN VÀ LAYOUT
-           ========================================= */
         * {
             margin: 0;
             padding: 0;
@@ -24,9 +21,6 @@
             min-height: 100vh;
         }
 
-        /* =========================================
-           2. HEADER
-           ========================================= */
         header {
             background-color: #1e3a8a;
             color: #fff;
@@ -100,9 +94,6 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
 
-        /* =========================================
-           BỘ LỌC TRẠNG THÁI
-           ========================================= */
         .filter-dropdown {
             position: relative;
             display: inline-block;
@@ -144,12 +135,9 @@
             font-weight: bold;
         }
 
-        /* =========================================
-           3. KHU VỰC QUẢN LÝ (ADMIN SECTION)
-           ========================================= */
         .admin-section {
             padding: 40px 80px;
-            flex: 1; /* Đẩy footer xuống dưới cùng */
+            flex: 1;
         }
 
         .admin-header {
@@ -181,7 +169,6 @@
             background-color: #059669;
         }
         
-        /* Bảng hiển thị */
         .admin-table {
             width: 100%;
             border-collapse: collapse;
@@ -215,7 +202,6 @@
             border-radius: 5px;
         }
         
-        /* Các nút hành động */
         .btn-edit {
             background-color: #3b82f6;
             color: white;
@@ -256,11 +242,8 @@
             font-weight: bold;
         }
 
-        /* =========================================
-           4. POP-UP (MODAL) SỬA SẢN PHẨM 
-           ========================================= */
         .modal-overlay {
-            display: none; /* Ẩn đi theo mặc định */
+            display: none;
             position: fixed; 
             top: 0; 
             left: 0; 
@@ -306,7 +289,6 @@
             color: #ef4444; 
         }
 
-        /* Style cho Form trong Modal */
         .form-group { 
             margin-bottom: 15px; 
         }
@@ -341,9 +323,6 @@
             flex: 1; 
         }
 
-        /* =========================================
-           5. FOOTER
-           ========================================= */
         footer {
             background-color: #0f172a;
             color: #fff;
@@ -585,7 +564,6 @@
     </div>
 
     <script>
-    // --- XỬ LÝ POP-UP SỬA ---
     function openEditModal(button) {
         let id = button.getAttribute('data-id');
         document.getElementById('edit_name').value = button.getAttribute('data-name');
@@ -594,14 +572,11 @@
         document.getElementById('edit_image').value = button.getAttribute('data-image');
         document.getElementById('edit_description').value = button.getAttribute('data-description');
         
-        // Reset ô chọn file
         document.getElementById('edit_upload').value = "";
 
-        // Hiển thị ảnh hiện tại của sản phẩm
         let imgUrl = button.getAttribute('data-image');
         let preview = document.getElementById('edit_preview');
         if (imgUrl) {
-            // Kiểm tra nếu là ảnh từ storage hay ảnh URL
             preview.src = imgUrl.startsWith('http') ? imgUrl : "/storage/" + imgUrl;
             preview.style.display = 'block';
         } else {
@@ -665,19 +640,16 @@
             closeAddModal();
         }
     }
-    // --- XỬ LÝ BỘ LỌC ---
     function toggleFilter() {
         document.getElementById("myStockFilter").classList.toggle("show");
     }
 
     window.onclick = function(event) {
-        // Đóng Modal
         if (event.target.classList.contains('modal-overlay')) {
             closeEditModal();
             closeAddModal();
         }
         
-        // Đóng Bộ lọc nếu bấm ra ngoài
         if (!event.target.matches('.fa-filter')) {
             var dropdowns = document.getElementsByClassName("filter-content");
             for (var i = 0; i < dropdowns.length; i++) {

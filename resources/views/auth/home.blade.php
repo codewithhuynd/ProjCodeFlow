@@ -7,7 +7,6 @@
     <title>Cửa Hàng Thời Trang</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS Reset cơ bản */
         * {
             margin: 0;
             padding: 0;
@@ -19,7 +18,6 @@
             background-color: #f8fafc;
         }
 
-        /* --- HEADER --- */
         header {
             background-color: #1e3a8a;
             color: #fff;
@@ -61,7 +59,6 @@
             color: #93c5fd;
         }
 
-        /* --- KHU VỰC CÁC NÚT TƯƠNG TÁC (TÌM KIẾM, BỘ LỌC, GIỎ HÀNG, AUTH) --- */
         .header-actions {
             display: flex;
             align-items: center;
@@ -149,7 +146,6 @@
             font-weight: bold;
         }
 
-        /* Nút Đăng nhập / Đăng ký / Đăng xuất */
         .auth-buttons {
             display: flex;
             align-items: center;
@@ -193,7 +189,6 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
 
-        /* --- CÁC PHẦN CÒN LẠI CỦA TRANG (GIỮ NGUYÊN) --- */
         .hero {
             background-color: #eff6ff;
             display: flex;
@@ -429,14 +424,12 @@
             cursor: pointer;
         }
 
-        /* Khung ngoài của Popup */
         .cart-popup {
             display: none;
             position: absolute;
             right: 0;
             top: 40px;
             width: 360px;
-            /* Rộng hơn một chút để chứa đủ nút tăng giảm và giá */
             background-color: #ffffff;
             box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
@@ -446,7 +439,6 @@
             overflow-y: auto;
             text-align: left;
             cursor: default;
-            /* Tránh bị dính hiệu ứng con trỏ trỏ vào link của thẻ cha */
         }
 
         .cart-popup.show {
@@ -712,13 +704,15 @@
                         
                         <div style="margin-top: 5px; display: flex; align-items: center; gap: 5px;">
                             @php
-                                $avgRating = round($product->reviews_avg_rating ?? 0);
+                                $avgRating = $product->reviews_avg_rating ?? 0;
                             @endphp
 
                             <div style="color: #eab308; font-size: 12px;">
-                                @for($i = 1; $i <= 5; $i++)
-                                    @if($i <= $avgRating)
+                                @for($i = 1; $i <= 5; $i++) 
+                                    @if($i <= floor($avgRating)) 
                                         <i class="fas fa-star"></i> 
+                                    @elseif($i == ceil($avgRating) && $avgRating - floor($avgRating) >= 0.5)
+                                        <i class="fas fa-star-half-alt"></i> 
                                     @else
                                         <i class="far fa-star" style="color: #cbd5e1;"></i> 
                                     @endif
@@ -771,7 +765,7 @@
                     },
                     body: JSON.stringify({
                         quantity: 1
-                    }) // Mặc định thêm 1
+                    })
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -826,7 +820,6 @@
                         let product = item.product;
                         let imageSrc = product.image.startsWith('http') ? product.image : `/storage/${product.image}`;
 
-                        // PHẦN 1: Cấu trúc từng dòng sản phẩm (Thêm nút xóa nhỏ - Trash icon)
                         html += `
                             <div class="cart-item" id="cart-item-${item.id}">
                                 <input type="checkbox" class="cart-item-checkbox" 
@@ -858,7 +851,6 @@
                             </div>`;
                     });
 
-                    // PHẦN 2: Cấu trúc Footer của Popup (Thêm nút Xóa hàng loạt)
                     html += `
                         <div class="cart-footer">
                             <div class="cart-total-row">
@@ -882,7 +874,6 @@
                 });
         }
 
-        // Cập nhật số lượng khi bấm +/- trong popup
         function updatePopupQty(cartId, action) {
             let qtyInput = document.getElementById('cart-qty-' + cartId);
             let checkbox = document.getElementById('cart-check-' + cartId);
@@ -932,20 +923,17 @@
 
             document.getElementById('cart-total-price').innerText = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
             
-            // Hiện nút xóa nếu có ít nhất 1 sản phẩm được chọn
             if (deleteBtn) {
                 deleteBtn.style.display = checkboxes.length > 0 ? 'block' : 'none';
             }
         }
 
-        // Hàm xóa 1 sản phẩm
         function removeSingleItem(cartId) {
             if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
                 executeDelete([cartId]);
             }
         }
 
-        // Hàm xóa nhiều sản phẩm đã chọn
         function removeSelectedItems() {
             let selected = [];
             document.querySelectorAll('.cart-item-checkbox:checked').forEach(box => {
@@ -971,27 +959,23 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    // Bước 1: Xóa các phần tử đã xóa khỏi giao diện (không dùng loadCartItems)
                     ids.forEach(id => {
                         const itemRow = document.getElementById(`cart-item-${id}`);
                         if (itemRow) itemRow.remove();
                     });
 
-                    // Bước 2: Cập nhật số lượng trên icon giỏ hàng
                     let badge = document.getElementById('cart-count');
                     if (badge) {
                         badge.innerText = data.cartCount;
                         badge.style.display = data.cartCount > 0 ? 'inline-block' : 'none';
                     }
 
-                    // Bước 3: Kiểm tra nếu giỏ hàng trống hẳn sau khi xóa
                     const container = document.getElementById('cart-items-container');
                     const remainingItems = container.querySelectorAll('.cart-item');
                     if (remainingItems.length === 0) {
                         container.innerHTML = '<div class="empty-cart-msg">Giỏ hàng trống</div>';
                     }
 
-                    // Bước 4: Tính lại tổng tiền ngay lập tức (vẫn giữ được các dấu tick còn lại)
                     calculateTotal();
                     
                 } else {
@@ -1026,10 +1010,8 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        // Nếu đủ hàng, mới cho phép chuyển sang trang thanh toán
                         window.location.href = '/checkout';
                     } else {
-                        // Nếu thiếu hàng, chỉ hiện Pop-up, KHÔNG tải lại trang!
                         alert(data.message); 
                     }
                 });

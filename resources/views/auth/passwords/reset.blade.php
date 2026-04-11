@@ -100,40 +100,33 @@
             }
         }
 
-        // Xử lý kiểm tra mật khẩu khớp nhau trực tiếp
         const passwordInput = document.getElementById('password');
         const confirmInput = document.getElementById('password_confirmation');
         const submitBtn = document.getElementById('submit-btn');
         const errorMsg = document.getElementById('match-error');
         const form = document.querySelector('form'); 
 
-        // Khóa nút bấm ngay từ đầu khi vừa vào trang
         submitBtn.disabled = true;
 
         function checkPasswordsMatch() {
-            // Nếu 1 trong 2 ô vẫn còn trống -> Tiếp tục khóa nút
             if (passwordInput.value === "" || confirmInput.value === "") {
                 errorMsg.classList.add('hidden');
                 submitBtn.disabled = true;
                 return;
             }
 
-            // Nếu 2 ô khác nhau -> Hiện cảnh báo đỏ và khóa nút bấm
             if (passwordInput.value !== confirmInput.value) {
                 errorMsg.classList.remove('hidden');
                 submitBtn.disabled = true;
             } else {
-                // Nếu khớp nhau 100% -> Ẩn cảnh báo và MỞ KHÓA nút
                 errorMsg.classList.add('hidden');
                 submitBtn.disabled = false;
             }
         }
 
-        // Lắng nghe từng phím gõ của người dùng
         passwordInput.addEventListener('input', checkPasswordsMatch);
         confirmInput.addEventListener('input', checkPasswordsMatch);
 
-        // Chặn Enter nếu sai
         form.addEventListener('submit', function(event) {
             if (passwordInput.value !== confirmInput.value || passwordInput.value === "") {
                 event.preventDefault(); 

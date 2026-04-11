@@ -5,13 +5,12 @@
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
 
-<!-- Import thư viện Bootstrap 5 để có sẵn các class CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <style>
     body {
         margin: 0;
-        background: #2f2f2f; /* nền xám đậm */
+        background: #2f2f2f;
     }
 
     .sidebar {
@@ -28,7 +27,7 @@
         padding: 10px;
         border-radius: 8px;
         text-decoration: none;
-        color: white; /* chữ trắng */
+        color: white;
         margin-bottom: 10px;
     }
 
@@ -40,18 +39,18 @@
     .card-box {
         padding: 20px;
         border-radius: 12px;
-        background: #3d3d3d; /* thẻ màu xám */
-        color: white; /* chữ trắng để dễ đọc */
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* bóng rõ hơn */
+        background: #3d3d3d;
+        color: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         height: 100%;
     }
     .navbar-custom {
-        background: linear-gradient(90deg, #1e3c72, #2a5298); /* nền như cũ */
+        background: linear-gradient(90deg, #1e3c72, #2a5298);
     }
     .navbar-custom .navbar-brand,
     .navbar-custom a,
     .navbar-custom span {
-        color: white !important; /* tất cả chữ trắng */
+        color: white !important;
     }
 
     .text-white-custom {
@@ -77,14 +76,11 @@
 
 <body>
 
-<!-- Thanh điều hướng trên cùng (Navbar)-->
 
 <nav class="navbar navbar-custom px-3">
 
-    <!-- LOGO -->
     <img src="/images/logo.png" height="40">
     <span class="ms-2 fw-bold">Fashion Haven</span>
-    <!-- RIGHT -->
     <div class="d-flex align-items-center gap-3 ms-auto">
         <span class="navbar-brand m-0">Admin Panel</span>
         <a href="/admin/logout" class="btn btn-outline-light btn-sm">Đăng xuất</a>
@@ -92,7 +88,6 @@
 
 </nav>
 
-<!--Thanh menu bên trái (Sidebar)-->
 
 <div class="sidebar">
     <h5 class="text-white">MENU ADMIN</h5>
@@ -108,8 +103,6 @@
 
 </div>
 
-<!-- phần này hiển thị thông tin tổng quan. 
- row chia thành 3 cột thẻ thống kê (col-md-4), mỗi cột là một card-box. -->
 <div class="content text-white-custom">
 <h2>Dashboard</h2>
 

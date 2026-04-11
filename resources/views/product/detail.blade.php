@@ -8,7 +8,6 @@
     <title>{{ $product->name }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS Reset cơ bản */
         * {
             margin: 0;
             padding: 0;
@@ -20,7 +19,6 @@
             background-color: #f8fafc;
         }
 
-        /* --- HEADER (GIỐNG HỆT TRANG HOME) --- */
         header {
             background-color: #1e3a8a;
             color: #fff;
@@ -53,7 +51,6 @@
             color: #93c5fd;
         }
 
-        /* --- KHU VỰC CÁC NÚT TƯƠNG TÁC --- */
         .search-bar {
             background-color: rgba(255, 255, 255, 0.15);
             border-radius: 4px;
@@ -176,7 +173,6 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
 
-        /* Khung ngoài của Popup Giỏ Hàng */
         .cart-popup {
             display: none;
             position: absolute;
@@ -309,7 +305,6 @@
             background-color: #fecaca !important;
         }
 
-        /* ================= CỦA TRANG DETAIL ================= */
         .container {
             max-width: 1200px;
             margin: 30px auto;
@@ -460,7 +455,6 @@
             margin-top: 50px;
         }
 
-        /* ================= CSS PHẦN ĐÁNH GIÁ ================= */
         .reviews-section {
             margin-top: 50px;
             border-top: 1px solid #e2e8f0;
@@ -551,10 +545,8 @@
             border-color: #1e3a8a;
         }
 
-        /* Ẩn bớt các chữ tiếng Anh thừa nếu có */
         .pagination svg {
             width: 20px;
-            /* Khống chế cái mũi tên khổng lồ ban nãy */
             height: 20px;
         }
     </style>
@@ -1021,23 +1013,19 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        // Xóa trực tiếp các dòng trong giao diện
                         ids.forEach(id => {
                             const itemRow = document.getElementById(`cart-item-${id}`);
                             if (itemRow) itemRow.remove();
                         });
 
-                        // Cập nhật số lượng Badge giỏ hàng
                         let badge = document.getElementById('cart-count');
                         if (badge) {
                             badge.innerText = data.cartCount;
                             badge.style.display = data.cartCount > 0 ? 'inline-block' : 'none';
                         }
 
-                        // Tính lại tiền (giữ dấu tick)
                         calculateTotal();
 
-                        // Kiểm tra nếu xóa hết sạch thì hiện thông báo trống
                         const container = document.getElementById('cart-items-container');
                         if (container && container.querySelectorAll('.cart-item').length === 0) {
                             container.innerHTML = '<div class="empty-cart-msg">Giỏ hàng trống</div>';

@@ -25,7 +25,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Xóa các cột nếu muốn rollback (hoàn tác)
             $table->dropColumn(['phone', 'address', 'avatar']);
         });
     }

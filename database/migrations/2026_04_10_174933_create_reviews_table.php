@@ -15,16 +15,13 @@ return new class extends Migration
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
                 $table->foreignId('product_id')->constrained()->onDelete('cascade');
-                $table->foreignId('order_id')->constrained()->onDelete('cascade'); // Để biết đánh giá từ đơn hàng nào
-                $table->integer('rating'); // Lưu số sao (1-5)
-                $table->text('comment'); // Lời đánh giá
+                $table->foreignId('order_id')->constrained()->onDelete('cascade');
+                $table->integer('rating');
+                $table->text('comment');
                 $table->timestamps();
             });
         }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('reviews');
