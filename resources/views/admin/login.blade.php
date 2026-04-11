@@ -6,13 +6,8 @@
     <meta charset="UTF-8">
     <title>Admin Login</title>
 
-    <!-- Bootstrap -->
-    <!-- Import thư viện Bootstrap 5 để có sẵn các class CSS như form-control, btn, alert, v.v.-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <!--body: căn giữa nội dung theo chiều ngang và dọc, nền gradient xanh -->
-    <!--.login-box: khung trắng chứa form, có bo góc và bóng đổ -->
-    <!--.login-title: tiêu đề "Admin Login" căn giữa -->
     <style>
         body {
             margin: 0;
@@ -46,9 +41,7 @@
     </nav>
     <div class="d-flex justify-content-center align-items-center" style="height:90vh;">
         <div class="login-box">
-            <!--Tạo một hộp đăng nhập với tiêu đề Admin Login -->
             <h3 class="login-title">Admin Login</h3>
-            <!-- Đoạn này kiểm tra: nếu có lỗi thì hiện ra khung đỏ báo lỗi-->
             @if(session('error'))
                 <div class="alert alert-danger">
                     {{ session('error') }}
@@ -58,7 +51,6 @@
                 @csrf
                 <div class="mb-3">
                     <label class="form-label">Email</label>
-                    <!-- Ô nhập Email-->
                     <input 
                         type="email"
                         name="email"

@@ -11,12 +11,12 @@ use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
-    public function showLogin() //Trả về giao diện đăng nhập admin
+    public function showLogin()
     {
         return view('admin.login');
     }
 
-    public function login(Request $request) //Nhận dữ liệu từ form (email, password)
+    public function login(Request $request)
     {
         $credentials = $request->only('email','password');
 
@@ -69,7 +69,6 @@ class AdminController extends Controller
                 $query->where('stock', '=', 0);
             }
         }
-        // Lấy toàn bộ sản phẩm từ Database, sắp xếp mới nhất lên đầu
         $products = $query->orderBy('id', 'desc')->get(); 
         
         return view('admin.products', compact('products'));
@@ -83,29 +82,25 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Đã xóa sản phẩm!');
     }
 
-    // 2. Hàm hiện trang Sửa
     public function edit($id) 
     {
         $product = Product::findOrFail($id);
         return view('admin.edit_product', compact('product'));
     }
 
-    // 3. Hàm lưu dữ liệu sau khi Sửa
     public function update(Request $request, $id) 
     {
         $product = Product::findOrFail($id);
         
         $product->name = $request->name;
         $product->price = $request->price;
-        $product->stock = $request->stock; // Thêm dòng này để cập nhật Tồn kho
+        $product->stock = $request->stock;
         $product->description = $request->description;
 
-        // Ưu tiên 1: Cập nhật file ảnh từ máy
         if ($request->hasFile('image_upload')) {
             $path = $request->file('image_upload')->store('products', 'public');
             $product->image = $path;
         } 
-        // Ưu tiên 2: Cập nhật URL ảnh mới
         elseif ($request->filled('image')) {
             $product->image = $request->image;
         }
@@ -115,7 +110,6 @@ class AdminController extends Controller
         return redirect()->route('admin.products')->with('success', 'Cập nhật thành công!');
     }
 
-    // 4. Hàm Thêm sản phẩm mới
     public function store(Request $request)
     {
         $product = new Product();
@@ -123,15 +117,13 @@ class AdminController extends Controller
         $product->price = $request->price;
         $product->stock = $request->stock;
         $product->description = $request->description;
-        $product->category_id = 1; // Vì chưa làm chọn danh mục, gán tạm vào danh mục số 1
-        $product->slug = Str::slug($request->name); // Tự động tạo link slug từ tên sản phẩm
+        $product->category_id = 1;
+        $product->slug = Str::slug($request->name);
 
-        // Ưu tiên 1: Tải file từ máy
         if ($request->hasFile('image_upload')) {
             $path = $request->file('image_upload')->store('products', 'public');
             $product->image = $path; 
         } 
-        // Ưu tiên 2: Nhập URL
         elseif ($request->filled('image')) {
             $product->image = $request->image;
         } 

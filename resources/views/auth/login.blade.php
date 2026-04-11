@@ -76,11 +76,9 @@
         const eyeClosed = document.getElementById('eyeClosed');
 
         togglePassword.addEventListener('click', function () {
-            // Kiểm tra trạng thái hiện tại và đổi type
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
             
-            // Chuyển đổi hiển thị giữa 2 icon
             eyeOpen.classList.toggle('hidden');
             eyeClosed.classList.toggle('hidden');
         });

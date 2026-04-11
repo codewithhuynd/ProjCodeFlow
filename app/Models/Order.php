@@ -25,7 +25,6 @@ class Order extends Model
         self::STATUS_CANCELED,
     ];
 
-    // ✅ Cho phép insert dữ liệu
     protected $fillable = [
         'user_id',
         'name',
@@ -35,13 +34,11 @@ class Order extends Model
         'status'
     ];
 
-    // 🔗 1 Order thuộc về 1 User
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // 🔗 1 Order có nhiều sản phẩm
     public function items()
     {
         return $this->hasMany(OrderItem::class);

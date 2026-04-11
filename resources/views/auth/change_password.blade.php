@@ -73,13 +73,11 @@
             const input = document.getElementById(inputId);
             const icon = document.getElementById(iconId);
             
-            // Nếu đang là password (ẩn) thì chuyển thành text (hiện) và đổi icon thành mắt bị gạch
             if (input.type === "password") {
                 input.type = "text";
                 icon.classList.remove("fa-eye");
                 icon.classList.add("fa-eye-slash");
             } else {
-                // Ngược lại thì đưa về ẩn
                 input.type = "password";
                 icon.classList.remove("fa-eye-slash");
                 icon.classList.add("fa-eye");
