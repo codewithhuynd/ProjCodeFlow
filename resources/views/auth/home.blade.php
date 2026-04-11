@@ -826,13 +826,29 @@
                         let product = item.product;
                         let imageSrc = product.image.startsWith('http') ? product.image : `/storage/${product.image}`;
 
+                        // PHẦN 1: Cấu trúc từng dòng sản phẩm (Thêm nút xóa nhỏ - Trash icon)
                         html += `
-                            <div class="cart-item">
-                                <input type="checkbox" class="cart-item-checkbox" id="cart-check-${item.id}" data-price="${product.price}" data-qty="${item.quantity}" onchange="calculateTotal()">
+                            <div class="cart-item" id="cart-item-${item.id}">
+                                <input type="checkbox" class="cart-item-checkbox" 
+                                    id="cart-check-${item.id}" 
+                                    data-id="${item.id}" 
+                                    data-price="${product.price}" 
+                                    data-qty="${item.quantity}" 
+                                    onchange="calculateTotal()">
+                                
                                 <img src="${imageSrc}" alt="${product.name}">
+                                
                                 <div class="cart-item-info">
-                                    <div class="cart-item-name">${product.name}</div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div class="cart-item-name">${product.name}</div>
+                                        <i class="fas fa-trash-alt" 
+                                        style="color: #ef4444; cursor: pointer; font-size: 14px; padding: 5px;" 
+                                        onclick="removeSingleItem(${item.id})" 
+                                        title="Xóa sản phẩm này"></i>
+                                    </div>
+                                    
                                     <div class="cart-item-price">${new Intl.NumberFormat('vi-VN').format(product.price)}đ</div>
+                                    
                                     <div class="cart-qty-controls">
                                         <button class="cart-qty-btn" onclick="updatePopupQty(${item.id}, 'decrease')">-</button>
                                         <input type="text" class="cart-qty-input" id="cart-qty-${item.id}" value="${item.quantity}" readonly>
@@ -842,14 +858,23 @@
                             </div>`;
                     });
 
-                    // Thêm phần Footer (Tổng tiền + Nút đặt hàng tượng trưng)
+                    // PHẦN 2: Cấu trúc Footer của Popup (Thêm nút Xóa hàng loạt)
                     html += `
                         <div class="cart-footer">
                             <div class="cart-total-row">
                                 <span>Tổng tiền dự kiến:</span>
                                 <span id="cart-total-price" style="color: #ef4444;">0đ</span>
                             </div>
+                            
                             <button class="btn-order-dummy" onclick="goToCheckout()">ĐẶT HÀNG NGAY</button>
+                            
+                            <button id="btn-delete-selected" 
+                                    onclick="removeSelectedItems()" 
+                                    style="width: 100%; background: #fee2e2; border: 1px solid #ef4444; color: #ef4444; 
+                                        padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; 
+                                        margin-top: 8px; display: none; transition: 0.3s;">
+                                <i class="fas fa-trash"></i> XÓA SẢN PHẨM ĐÃ CHỌN
+                            </button>
                         </div>
                     `;
 
@@ -893,10 +918,11 @@
                     }
                 });
         }
-        // Tính tổng tiền dựa trên các ô checkbox được tick
+        
         function calculateTotal() {
             let total = 0;
             let checkboxes = document.querySelectorAll('.cart-item-checkbox:checked');
+            let deleteBtn = document.getElementById('btn-delete-selected');
 
             checkboxes.forEach(box => {
                 let price = parseFloat(box.getAttribute('data-price'));
@@ -905,6 +931,73 @@
             });
 
             document.getElementById('cart-total-price').innerText = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
+            
+            // Hiện nút xóa nếu có ít nhất 1 sản phẩm được chọn
+            if (deleteBtn) {
+                deleteBtn.style.display = checkboxes.length > 0 ? 'block' : 'none';
+            }
+        }
+
+        // Hàm xóa 1 sản phẩm
+        function removeSingleItem(cartId) {
+            if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+                executeDelete([cartId]);
+            }
+        }
+
+        // Hàm xóa nhiều sản phẩm đã chọn
+        function removeSelectedItems() {
+            let selected = [];
+            document.querySelectorAll('.cart-item-checkbox:checked').forEach(box => {
+                selected.push(box.getAttribute('data-id'));
+            });
+
+            if (selected.length === 0) return;
+
+            if (confirm('Bạn có chắc chắn muốn xóa các sản phẩm đã chọn?')) {
+                executeDelete(selected);
+            }
+        }
+
+        function executeDelete(ids) {
+            fetch('/remove-from-cart', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cart_ids: ids })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Bước 1: Xóa các phần tử đã xóa khỏi giao diện (không dùng loadCartItems)
+                    ids.forEach(id => {
+                        const itemRow = document.getElementById(`cart-item-${id}`);
+                        if (itemRow) itemRow.remove();
+                    });
+
+                    // Bước 2: Cập nhật số lượng trên icon giỏ hàng
+                    let badge = document.getElementById('cart-count');
+                    if (badge) {
+                        badge.innerText = data.cartCount;
+                        badge.style.display = data.cartCount > 0 ? 'inline-block' : 'none';
+                    }
+
+                    // Bước 3: Kiểm tra nếu giỏ hàng trống hẳn sau khi xóa
+                    const container = document.getElementById('cart-items-container');
+                    const remainingItems = container.querySelectorAll('.cart-item');
+                    if (remainingItems.length === 0) {
+                        container.innerHTML = '<div class="empty-cart-msg">Giỏ hàng trống</div>';
+                    }
+
+                    // Bước 4: Tính lại tổng tiền ngay lập tức (vẫn giữ được các dấu tick còn lại)
+                    calculateTotal();
+                    
+                } else {
+                    alert(data.message);
+                }
+            });
         }
 
         function goToCheckout() {

@@ -2,6 +2,7 @@
 <html lang="vi">
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $product->name }}</title>
@@ -140,7 +141,9 @@
             padding-left: 15px;
         }
 
-        .btn-login, .btn-register, .btn-logout {
+        .btn-login,
+        .btn-register,
+        .btn-logout {
             color: #fff;
             text-decoration: none;
             font-size: 14px;
@@ -152,11 +155,26 @@
             border: none;
         }
 
-        .btn-login:hover { color: #93c5fd; }
-        .btn-register { background-color: #2563eb; }
-        .btn-register:hover { background-color: #1d4ed8; }
-        .btn-logout { border: 1px solid #fff; background: transparent; }
-        .btn-logout:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .btn-login:hover {
+            color: #93c5fd;
+        }
+
+        .btn-register {
+            background-color: #2563eb;
+        }
+
+        .btn-register:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-logout {
+            border: 1px solid #fff;
+            background: transparent;
+        }
+
+        .btn-logout:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
 
         /* Khung ngoài của Popup Giỏ Hàng */
         .cart-popup {
@@ -176,20 +194,120 @@
             cursor: default;
         }
 
-        .cart-popup.show { display: block; }
-        .empty-cart-msg { text-align: center; padding: 20px; font-size: 14px; color: #64748b; }
-        .cart-item { display: flex; align-items: center; gap: 10px; padding: 12px 10px; border-bottom: 1px solid #f1f5f9; }
-        .cart-item-checkbox { width: 16px; height: 16px; cursor: pointer; }
-        .cart-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #e2e8f0; }
-        .cart-item-info { flex: 1; display: flex; flex-direction: column; gap: 5px; }
-        .cart-item-name { font-size: 13px; font-weight: 600; color: #1e3a8a; }
-        .cart-item-price { font-size: 13px; color: #ef4444; font-weight: bold; }
-        .cart-qty-controls { display: flex; align-items: center; gap: 5px; }
-        .cart-qty-btn { width: 20px; height: 20px; text-align: center; border: 1px solid #ccc; background: #fff; cursor: pointer; border-radius: 3px; line-height: 18px; }
-        .cart-qty-input { width: 30px; text-align: center; border: 1px solid #ccc; height: 20px; font-size: 12px; }
-        .cart-footer { padding: 15px 10px; border-top: 2px solid #e2e8f0; display: flex; flex-direction: column; gap: 10px; }
-        .cart-total-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; color: #333; }
-        .btn-order-dummy { background: #1e3a8a; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center; }
+        .cart-popup.show {
+            display: block;
+        }
+
+        .empty-cart-msg {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 10px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .cart-item-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .cart-item-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .cart-item-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+
+        .cart-item-price {
+            font-size: 13px;
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .cart-qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cart-qty-btn {
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+            border-radius: 3px;
+            line-height: 18px;
+        }
+
+        .cart-qty-input {
+            width: 30px;
+            text-align: center;
+            border: 1px solid #ccc;
+            height: 20px;
+            font-size: 12px;
+        }
+
+        .cart-footer {
+            padding: 15px 10px;
+            border-top: 2px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .btn-order-dummy {
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .fa-trash-alt:hover {
+            color: #dc2626 !important;
+            transform: scale(1.1);
+            transition: 0.2s;
+        }
+
+        #btn-delete-selected:hover {
+            background-color: #fecaca !important;
+        }
 
         /* ================= CỦA TRANG DETAIL ================= */
         .container {
@@ -341,6 +459,7 @@
             font-size: 14px;
             margin-top: 50px;
         }
+
         /* ================= CSS PHẦN ĐÁNH GIÁ ================= */
         .reviews-section {
             margin-top: 50px;
@@ -397,6 +516,7 @@
             margin-top: 10px;
             display: block;
         }
+
         .pagination {
             display: flex;
             justify-content: center;
@@ -410,7 +530,8 @@
             display: inline-block;
         }
 
-        .pagination li a, .pagination li span {
+        .pagination li a,
+        .pagination li span {
             padding: 8px 16px;
             border: 1px solid #e2e8f0;
             border-radius: 6px;
@@ -430,11 +551,12 @@
             border-color: #1e3a8a;
         }
 
-/* Ẩn bớt các chữ tiếng Anh thừa nếu có */
-.pagination svg {
-    width: 20px; /* Khống chế cái mũi tên khổng lồ ban nãy */
-    height: 20px;
-}
+        /* Ẩn bớt các chữ tiếng Anh thừa nếu có */
+        .pagination svg {
+            width: 20px;
+            /* Khống chế cái mũi tên khổng lồ ban nãy */
+            height: 20px;
+        }
     </style>
 </head>
 
@@ -468,7 +590,7 @@
         @php
         $totalQuantity = 0;
         if(Auth::check()) {
-            $totalQuantity = \App\Models\Cart::where('user_id', Auth::id())->sum('quantity');
+        $totalQuantity = \App\Models\Cart::where('user_id', Auth::id())->sum('quantity');
         }
         @endphp
 
@@ -486,7 +608,8 @@
             <div id="cart-wrapper" style="position: relative; display:inline-block; cursor: pointer;">
                 <div onclick="toggleCartPopup(event)">
                     <i class="fas fa-shopping-cart" title="Giỏ hàng"></i>
-                    <span id="cart-count" style="position: absolute; top: -8px; right: -10px; background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; display: {{ $totalQuantity > 0 ? 'inline-block' : 'none' }};">
+                    <span id="cart-count"
+                        style="position: absolute; top: -8px; right: -10px; background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; display: {{ $totalQuantity > 0 ? 'inline-block' : 'none' }};">
                         {{ $totalQuantity }}
                     </span>
                 </div>
@@ -498,46 +621,52 @@
 
         <div class="auth-buttons">
             @auth
-                @if(Auth::user()->is_admin)
-                    <span style="font-size: 14px; color: #ef4444;">Đang dùng quyền Quản trị</span>
-                    <a href="/admin/dashboard" style="background-color: #1e3a8a; color: white; padding: 6px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px;">
-                        Vào Trang Admin
-                    </a>
-                    <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
-                        @csrf
-                        <button type="submit" class="btn-logout" style="padding: 5px 10px; font-size: 12px;">Đăng xuất</button>
-                    </form>
-                @else
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <img src="{{ asset('images/ảnh đại diện mặc định.jpg') }}" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #93c5fd;">
-                        
-                        <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                            <span style="font-size: 14px; color: #fff;">Chào <strong>{{ Auth::user()->name }}</strong></span>
-                            
-                            <div style="display: flex; gap: 8px; margin-top: 4px;">
-                                <a href="{{ route('profile.edit') }}" style="color: #fff; font-size: 11px; text-decoration: none; background: #2563eb; padding: 3px 8px; border-radius: 4px; border: 1px solid #3b82f6;">
-                                    <i class="fas fa-user-edit"></i> Cập nhật thông tin
-                                </a>
-                                <a href="{{ route('my.orders') }}" style="color: #fff; font-size: 11px; text-decoration: none; background: #10b981; padding: 3px 8px; border-radius: 4px; border: 1px solid #059669;">
-                                    <i class="fas fa-box"></i> Đơn hàng của tôi
-                                </a>
-                            </div>
-                        </div>
-
-                        <div style="display: flex; flex-direction: column; align-items: center; margin-left: 5px;">
-                            <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
-                                @csrf
-                                <button type="submit" class="btn-logout" style="width: 100%; padding: 4px 10px; font-size: 11px;">Đăng xuất</button>
-                            </form>
-                            <a href="{{ route('password.change') }}" style="color: #bfdbfe; font-size: 11px; text-decoration: underline; margin-top: 4px;">
-                                Đổi mật khẩu?
-                            </a>
-                        </div>
-                    </div>
-                @endif
+            @if(Auth::user()->is_admin)
+            <span style="font-size: 14px; color: #ef4444;">Đang dùng quyền Quản trị</span>
+            <a href="/admin/dashboard"
+                style="background-color: #1e3a8a; color: white; padding: 6px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                Vào Trang Admin
+            </a>
+            <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                @csrf
+                <button type="submit" class="btn-logout" style="padding: 5px 10px; font-size: 12px;">Đăng xuất</button>
+            </form>
             @else
-                <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
-                <a href="/register" class="btn-register">Đăng ký</a>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="{{ asset('images/ảnh đại diện mặc định.jpg') }}"
+                    style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #93c5fd;">
+
+                <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                    <span style="font-size: 14px; color: #fff;">Chào <strong>{{ Auth::user()->name }}</strong></span>
+
+                    <div style="display: flex; gap: 8px; margin-top: 4px;">
+                        <a href="{{ route('profile.edit') }}"
+                            style="color: #fff; font-size: 11px; text-decoration: none; background: #2563eb; padding: 3px 8px; border-radius: 4px; border: 1px solid #3b82f6;">
+                            <i class="fas fa-user-edit"></i> Cập nhật thông tin
+                        </a>
+                        <a href="{{ route('my.orders') }}"
+                            style="color: #fff; font-size: 11px; text-decoration: none; background: #10b981; padding: 3px 8px; border-radius: 4px; border: 1px solid #059669;">
+                            <i class="fas fa-box"></i> Đơn hàng của tôi
+                        </a>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: center; margin-left: 5px;">
+                    <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
+                        @csrf
+                        <button type="submit" class="btn-logout"
+                            style="width: 100%; padding: 4px 10px; font-size: 11px;">Đăng xuất</button>
+                    </form>
+                    <a href="{{ route('password.change') }}"
+                        style="color: #bfdbfe; font-size: 11px; text-decoration: underline; margin-top: 4px;">
+                        Đổi mật khẩu?
+                    </a>
+                </div>
+            </div>
+            @endif
+            @else
+            <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
+            <a href="/register" class="btn-register">Đăng ký</a>
             @endauth
         </div>
     </header>
@@ -549,63 +678,35 @@
 
         <div class="product">
             <div class="product-image">
-                <img src="{{ str_starts_with($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="width: 100%; border-radius: 8px;">
-            </div>
-
-            <div class="reviews-section">
-                <h3>Khách hàng nói gì về sản phẩm này?</h3>
-
-                @if(isset($reviews) && $reviews->count() > 0)
-                    @foreach($reviews as $review)
-                        <div class="review-card">
-                            <div class="review-header">
-                                <span class="review-author"><i class="fas fa-user-circle"></i> {{ $review->user->name }}</span>
-                                <div class="review-stars">
-                                    {{ str_repeat('⭐', $review->rating) }}
-                                </div>
-                            </div>
-                            <p class="review-comment">"{{ $review->comment }}"</p>
-                            <span class="review-date">Đã đánh giá vào: {{ $review->created_at->format('d/m/Y H:i') }}</span>
-                        </div>
-                    @endforeach
-
-                    <div class="pagination-links" style="margin-top: 20px; display: flex; justify-content: center;">
-                        {{ $reviews->links() }}
-                    </div>
-                @else
-                    <p style="color: #64748b; font-style: italic; background: #fff; padding: 20px; text-align: center; border-radius: 8px; border: 1px dashed #cbd5e1;">
-                        Sản phẩm này chưa có đánh giá nào.
-                    </p>
-                @endif
+                <img src="{{ str_starts_with($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}"
+                    alt="{{ $product->name }}" style="width: 100%; border-radius: 8px;">
             </div>
 
             <div class="product-info">
                 <div class="category">{{ $product->category->name ?? 'Thời trang' }}</div>
                 <h1>{{ $product->name }}</h1>
                 @if($product->reviews && $product->reviews->count() > 0)
-                    <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                        @php 
-                            // Lấy số sao trung bình chính xác (số thập phân, không làm tròn gộp)
-                            $avgRating = $product->reviews->avg('rating'); 
-                        @endphp
-                        
-                        <div style="color: #eab308; font-size: 14px;">
-                            @for($i = 1; $i <= 5; $i++)
-                                @if($i <= floor($avgRating))
-                                    <i class="fas fa-star"></i> @elseif($i == ceil($avgRating) && $avgRating - floor($avgRating) >= 0.5)
-                                    <i class="fas fa-star-half-alt"></i> @else
-                                    <i class="far fa-star" style="color: #cbd5e1;"></i> @endif
+                <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                    @php
+                    $avgRating = $product->reviews->avg('rating');
+                    @endphp
+
+                    <div style="color: #eab308; font-size: 14px;">
+                        @for($i = 1; $i <= 5; $i++) @if($i <=floor($avgRating)) <i class="fas fa-star"></i> @elseif($i ==
+                            ceil($avgRating) && $avgRating - floor($avgRating) >= 0.5)
+                            <i class="fas fa-star-half-alt"></i> @else
+                            <i class="far fa-star" style="color: #cbd5e1;"></i> @endif
                             @endfor
-                        </div>
-
-                        <span style="color: #1e3a8a; font-size: 13px; font-weight: bold;">
-                            {{ number_format($avgRating, 1) }}/5
-                        </span>
-
-                        <span style="color: #64748b; font-size: 13px;">
-                            ({{ $product->reviews->count() }} đánh giá)
-                        </span>
                     </div>
+
+                    <span style="color: #1e3a8a; font-size: 13px; font-weight: bold;">
+                        {{ number_format($avgRating, 1) }}/5
+                    </span>
+
+                    <span style="color: #64748b; font-size: 13px;">
+                        ({{ $product->reviews->count() }} đánh giá)
+                    </span>
+                </div>
                 @endif
                 <div class="price">{{ number_format($product->price, 0, ',', '.') }}đ</div>
 
@@ -646,7 +747,49 @@
                 </div>
             </div>
         </div>
+
+        <div class="reviews-section">
+            <h3>Khách hàng nói gì về sản phẩm này?</h3>
+
+            @if(isset($reviews) && $reviews->count() > 0)
+            @foreach($reviews as $review)
+            <div class="review-card">
+                <div class="review-header">
+                    <span class="review-author"><i class="fas fa-user-circle"></i> {{ $review->user->name }}</span>
+                    <div class="review-stars">
+                        {{ str_repeat('⭐', $review->rating) }}
+                    </div>
+                </div>
+                <p class="review-comment">"{{ $review->comment }}"</p>
+                <span class="review-date">Đã đánh giá vào: {{ $review->created_at->format('d/m/Y H:i') }}</span>
+            </div>
+            @endforeach
+
+            <div class="pagination-links" style="margin-top: 20px; display: flex; justify-content: center;">
+                {{ $reviews->links() }}
+            </div>
+            @else
+            <p
+                style="color: #64748b; font-style: italic; background: #fff; padding: 20px; text-align: center; border-radius: 8px; border: 1px dashed #cbd5e1;">
+                Sản phẩm này chưa có đánh giá nào.
+            </p>
+            @endif
+        </div>
     </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Về chúng tôi</a>
+            <a href="#">Hỗ trợ khách hàng</a>
+            <a href="#">Chính sách bảo mật</a>
+            <a href="#">Liên hệ</a>
+        </div>
+        <div class="footer-socials">
+            <i class="fab fa-instagram"></i>
+            <i class="fab fa-facebook-f"></i>
+            <i class="fab fa-twitter"></i>
+        </div>
+    </footer>
 
     <script>
         const maxStock = Number("{{ $product->stock }}");
@@ -679,13 +822,13 @@
             let quantity = parseInt(document.getElementById('qty').value);
 
             fetch(`/add-to-cart/${productId}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ quantity: quantity })
-                })
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ quantity: quantity })
+            })
                 .then(res => res.json())
                 .then(data => {
                     alert(data.message);
@@ -706,7 +849,7 @@
             document.getElementById("myFilterDropdown").classList.toggle("show");
         }
 
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             if (!event.target.matches('.fa-filter')) {
                 var dropdowns = document.getElementsByClassName("filter-content");
                 for (var i = 0; i < dropdowns.length; i++) {
@@ -739,16 +882,29 @@
                     let html = '';
                     data.forEach(item => {
                         let product = item.product;
-                        // Đã fix cứng để ảnh trong giỏ hàng hiển thị chuẩn luôn
                         let imageSrc = product.image.startsWith('http') ? product.image : `/storage/${product.image}`;
-                        
+
                         html += `
-                            <div class="cart-item">
-                                <input type="checkbox" class="cart-item-checkbox" id="cart-check-${item.id}" data-price="${product.price}" data-qty="${item.quantity}" onchange="calculateTotal()">
+                            <div class="cart-item" id="cart-item-${item.id}">
+                                <input type="checkbox" class="cart-item-checkbox" 
+                                    id="cart-check-${item.id}" 
+                                    data-id="${item.id}" 
+                                    data-price="${product.price}" 
+                                    data-qty="${item.quantity}" 
+                                    onchange="calculateTotal()">
+                                
                                 <img src="${imageSrc}" alt="${product.name}">
+                                
                                 <div class="cart-item-info">
-                                    <div class="cart-item-name">${product.name}</div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div class="cart-item-name">${product.name}</div>
+                                        <i class="fas fa-trash-alt" 
+                                           style="color: #ef4444; cursor: pointer; font-size: 14px; padding: 5px;" 
+                                           onclick="removeSingleItem(${item.id})" title="Xóa sản phẩm này"></i>
+                                    </div>
+                                    
                                     <div class="cart-item-price">${new Intl.NumberFormat('vi-VN').format(product.price)}đ</div>
+                                    
                                     <div class="cart-qty-controls">
                                         <button class="cart-qty-btn" onclick="updatePopupQty(${item.id}, 'decrease')">-</button>
                                         <input type="text" class="cart-qty-input" id="cart-qty-${item.id}" value="${item.quantity}" readonly>
@@ -765,10 +921,18 @@
                                 <span id="cart-total-price" style="color: #ef4444;">0đ</span>
                             </div>
                             <button class="btn-order-dummy" onclick="goToCheckout()">ĐẶT HÀNG NGAY</button>
+                            <button id="btn-delete-selected" 
+                                    onclick="removeSelectedItems()" 
+                                    style="width: 100%; background: #fee2e2; border: 1px solid #ef4444; color: #ef4444; 
+                                           padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; 
+                                           margin-top: 8px; display: none; transition: 0.3s; text-align: center;">
+                                <i class="fas fa-trash"></i> XÓA SẢN PHẨM ĐÃ CHỌN
+                            </button>
                         </div>
                     `;
 
                     container.innerHTML = html;
+                    calculateTotal();
                 });
         }
 
@@ -784,13 +948,13 @@
             if (newQty === currentQty) return;
 
             fetch('/update-cart', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ cart_id: cartId, action: action })
-                })
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cart_id: cartId, action: action })
+            })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
@@ -808,6 +972,7 @@
         function calculateTotal() {
             let total = 0;
             let checkboxes = document.querySelectorAll('.cart-item-checkbox:checked');
+            let deleteBtn = document.getElementById('btn-delete-selected');
 
             checkboxes.forEach(box => {
                 let price = parseFloat(box.getAttribute('data-price'));
@@ -815,7 +980,72 @@
                 total += price * qty;
             });
 
-            document.getElementById('cart-total-price').innerText = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
+            const totalPriceElement = document.getElementById('cart-total-price');
+            if (totalPriceElement) {
+                totalPriceElement.innerText = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
+            }
+
+            if (deleteBtn) {
+                deleteBtn.style.display = checkboxes.length > 0 ? 'block' : 'none';
+            }
+        }
+
+        function removeSingleItem(id) {
+            if (confirm('Xóa sản phẩm này khỏi giỏ hàng?')) {
+                executeDelete([id]);
+            }
+        }
+
+        function removeSelectedItems() {
+            let selected = [];
+            document.querySelectorAll('.cart-item-checkbox:checked').forEach(box => {
+                selected.push(box.getAttribute('data-id'));
+            });
+
+            if (selected.length === 0) return;
+
+            if (confirm('Xóa các sản phẩm đã chọn?')) {
+                executeDelete(selected);
+            }
+        }
+
+        function executeDelete(ids) {
+            fetch('/remove-from-cart', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cart_ids: ids })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        // Xóa trực tiếp các dòng trong giao diện
+                        ids.forEach(id => {
+                            const itemRow = document.getElementById(`cart-item-${id}`);
+                            if (itemRow) itemRow.remove();
+                        });
+
+                        // Cập nhật số lượng Badge giỏ hàng
+                        let badge = document.getElementById('cart-count');
+                        if (badge) {
+                            badge.innerText = data.cartCount;
+                            badge.style.display = data.cartCount > 0 ? 'inline-block' : 'none';
+                        }
+
+                        // Tính lại tiền (giữ dấu tick)
+                        calculateTotal();
+
+                        // Kiểm tra nếu xóa hết sạch thì hiện thông báo trống
+                        const container = document.getElementById('cart-items-container');
+                        if (container && container.querySelectorAll('.cart-item').length === 0) {
+                            container.innerHTML = '<div class="empty-cart-msg">Giỏ hàng trống</div>';
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                });
         }
 
         function goToCheckout() {
@@ -831,20 +1061,18 @@
             }
 
             fetch('/checkout-selected', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ selected: selected })
-                })
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ selected: selected })
+            })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        // Đủ hàng -> Chuyển trang
                         window.location.href = '/checkout';
                     } else {
-                        // Thiếu hàng -> Bật thông báo Pop-up, không chuyển trang
                         alert(data.message);
                     }
                 });
